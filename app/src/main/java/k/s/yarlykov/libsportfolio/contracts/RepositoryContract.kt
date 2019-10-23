@@ -6,7 +6,10 @@ import k.s.yarlykov.libsportfolio.model.Photo
 interface RepositoryContract {
 
     interface IPhotoRepository {
-        fun getGallery() : Observable<Photo>
-        fun getFavourites() : Observable<Photo>
+        fun loadGallery() : Observable<List<Photo>>
+        fun loadFavourites() : Observable<List<Photo>>
+        fun addPhoto(photo: Photo)
+        fun deletePhoto(id : Int)
+        fun addToFavourites(id : Int)
     }
 }
