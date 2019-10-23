@@ -1,13 +1,15 @@
-package k.s.yarlykov.libsportfolio
+package k.s.yarlykov.libsportfolio.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.google.android.material.tabs.TabLayout
-import k.s.yarlykov.libsportfolio.fragments.BaseFragment
+import k.s.yarlykov.libsportfolio.*
+import k.s.yarlykov.libsportfolio.contracts.MainContract
+import k.s.yarlykov.libsportfolio.ui.fragments.TabFragment
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), MainContract.IMainView {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,7 +41,7 @@ class MainActivity : AppCompatActivity() {
         return with(Bundle()) {
             putInt(KEY_LAYOUT_ID, layoutId)
             putSerializable(KEY_SEASON, season)
-            BaseFragment.create(this)
+            TabFragment.create(this)
         }
     }
 }

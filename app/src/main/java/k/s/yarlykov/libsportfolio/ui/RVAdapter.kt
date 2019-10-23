@@ -1,4 +1,4 @@
-package k.s.yarlykov.libsportfolio
+package k.s.yarlykov.libsportfolio.ui
 
 import android.view.LayoutInflater
 import android.view.View
@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import k.s.yarlykov.libsportfolio.R
 import kotlin.random.Random
 
 class RVAdapter(private val pics: List<Int>, private val itemResourceId: Int) :

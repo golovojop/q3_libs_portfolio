@@ -1,4 +1,4 @@
-package k.s.yarlykov.libsportfolio.fragments
+package k.s.yarlykov.libsportfolio.ui.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,15 +8,17 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.GridLayoutManager
 import k.s.yarlykov.libsportfolio.*
+import k.s.yarlykov.libsportfolio.ui.GridItemDecoration
+import k.s.yarlykov.libsportfolio.ui.RVAdapter
 import kotlinx.android.synthetic.main.fragment_base.*
 import java.util.*
 
-class BaseFragment : Fragment() {
+class TabFragment : Fragment() {
 
     companion object {
 
-        fun create(bundle: Bundle?): BaseFragment {
-            return BaseFragment().apply {
+        fun create(bundle: Bundle?): TabFragment {
+            return TabFragment().apply {
                 arguments = Bundle().apply {
                     putBundle(KEY_BUNDLE, bundle)
                 }
