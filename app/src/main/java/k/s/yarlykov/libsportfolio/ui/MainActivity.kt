@@ -1,22 +1,37 @@
+/**
+ * Интеграция с Kotlin
+ * https://github.com/schoolhelper/MoxyX
+ */
+
 package k.s.yarlykov.libsportfolio.ui
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import com.arellomobile.mvp.MvpAppCompatActivity
+import com.arellomobile.mvp.presenter.InjectPresenter
+
+
 import com.google.android.material.tabs.TabLayout
-import k.s.yarlykov.libsportfolio.*
-import k.s.yarlykov.libsportfolio.contracts.MainContract
+import k.s.yarlykov.libsportfolio.CATEGORY
+import k.s.yarlykov.libsportfolio.KEY_LAYOUT_ID
+import k.s.yarlykov.libsportfolio.KEY_SEASON
+import k.s.yarlykov.libsportfolio.R
+import k.s.yarlykov.libsportfolio.presenters.IMainView
+import k.s.yarlykov.libsportfolio.presenters.MainPresenter
 import k.s.yarlykov.libsportfolio.ui.fragments.TabFragment
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity(), MainContract.IMainView {
+class MainActivity : MvpAppCompatActivity(), IMainView {
+
+    @InjectPresenter
+    lateinit var presenter : MainPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         fab.setOnClickListener {
-            finish()
+            presenter.onFabTapped()
         }
 
         initTabs()
@@ -43,5 +58,9 @@ class MainActivity : AppCompatActivity(), MainContract.IMainView {
             putSerializable(KEY_SEASON, season)
             TabFragment.create(this)
         }
+    }
+
+    override fun onClickFabHandler() {
+        finish()
     }
 }

@@ -1,20 +1,16 @@
 package k.s.yarlykov.libsportfolio.presenters
 
+import com.arellomobile.mvp.InjectViewState
+import com.arellomobile.mvp.MvpPresenter
 import k.s.yarlykov.libsportfolio.contracts.MainContract
 
-class MainPresenter() : MainContract.IMainPresenter {
+@InjectViewState
+class MainPresenter : MvpPresenter<IMainView>() {
 
     private var view : MainContract.IMainView? = null
 
-    override fun onFabTapped() {
+    fun onFabTapped() {
 
     }
 
-    override fun bind(view: MainContract.IMainView) {
-        this.view = view
-    }
-
-    override fun unbind() {
-        this.view = null
-    }
 }
