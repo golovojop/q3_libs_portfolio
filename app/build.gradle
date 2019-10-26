@@ -4,6 +4,8 @@ apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
 
+apply plugin: 'kotlin-kapt'
+
 android {
     androidExtensions {
         experimental = true
@@ -37,6 +39,9 @@ dependencies {
     implementation 'androidx.drawerlayout:drawerlayout:1.0.0'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.1.0'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.1.0'
+    kapt 'com.arello-mobile:moxy-compiler:1.5.5'
+    implementation 'tech.schoolhelper:moxy-x-androidx:1.7.0'
+    implementation 'tech.schoolhelper:moxy-x-material:1.7.0'
     implementation "io.reactivex.rxjava2:rxjava:2.1.9"
     implementation "io.reactivex.rxjava2:rxandroid:2.0.1"
     testImplementation 'junit:junit:4.12'
