@@ -1,6 +1,7 @@
 /**
  * Интеграция с Kotlin
  * https://github.com/schoolhelper/MoxyX
+ * https://stackoverflow.com/questions/57670510/how-to-get-rid-of-incremental-annotation-processing-requested-warning
  */
 
 package k.s.yarlykov.libsportfolio.ui
