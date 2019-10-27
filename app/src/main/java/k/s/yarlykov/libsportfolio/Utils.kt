@@ -5,8 +5,8 @@ import android.util.Log
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-enum class CATEGORY : Parcelable {
-    REGULAR, FAVOURITES
+enum class CONTENT : Parcelable {
+    GALLERY, FAVOURITES
 }
 
 const val KEY_BUNDLE = "KEY_BUNDLE"

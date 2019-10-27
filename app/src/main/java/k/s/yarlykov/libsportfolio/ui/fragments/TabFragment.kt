@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.arellomobile.mvp.MvpAppCompatFragment
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
+import com.arellomobile.mvp.presenter.ProvidePresenterTag
 import k.s.yarlykov.libsportfolio.*
 import k.s.yarlykov.libsportfolio.application.IRepositoryHelper
 import k.s.yarlykov.libsportfolio.model.Photo
@@ -18,33 +19,26 @@ import k.s.yarlykov.libsportfolio.ui.GridItemDecoration
 import k.s.yarlykov.libsportfolio.ui.PhotoRvAdapter
 import kotlinx.android.synthetic.main.fragment_base.*
 
-class TabFragment : MvpAppCompatFragment(), ITabFragment {
+abstract class TabFragment : MvpAppCompatFragment(), ITabFragment {
 
-    companion object {
+    abstract val contentType : CONTENT
 
-        fun create(bundle: Bundle?): TabFragment {
-            return TabFragment().apply {
-                arguments = Bundle().apply {
-                    putBundle(KEY_BUNDLE, bundle)
-                }
-            }
+    @InjectPresenter
+    open lateinit var presenter: TabPresenter
+
+    @ProvidePresenter
+    open fun providePresenter(): TabPresenter {
+        return TabPresenter().apply {
+            setContentType(contentType)
         }
     }
 
-    @InjectPresenter
-    lateinit var presenter : TabPresenter
+    @ProvidePresenterTag(presenterClass = TabPresenter::class)
+    open fun providePresenterTag(): String = contentType.name
 
-    @ProvidePresenter
-    fun providePresenter() : TabPresenter {
-        return TabPresenter()
-    }
-
-    var category = CATEGORY.REGULAR
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedtate: Bundle?) : View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedtate: Bundle?): View? {
 
         val layoutId = arguments?.getBundle(KEY_BUNDLE)!!.let { bundle ->
-            category = bundle.getParcelable(KEY_CATEGORY) as CATEGORY
             bundle.getInt(KEY_LAYOUT_ID)
         }
 

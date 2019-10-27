@@ -7,7 +7,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import k.s.yarlykov.libsportfolio.R
-import k.s.yarlykov.libsportfolio.logIt
 import k.s.yarlykov.libsportfolio.model.Photo
 
 class PhotoRvAdapter(private val itemResourceId: Int) : RecyclerView.Adapter<PhotoRvAdapter.ViewHolder>() {
@@ -15,7 +14,6 @@ class PhotoRvAdapter(private val itemResourceId: Int) : RecyclerView.Adapter<Pho
     private val model = mutableListOf<Photo>()
 
     fun updateModel(photos: List<Photo>) {
-        logIt("${photos}")
         model.clear()
         model.addAll(photos)
         notifyDataSetChanged()
@@ -40,13 +38,13 @@ class PhotoRvAdapter(private val itemResourceId: Int) : RecyclerView.Adapter<Pho
         val ivMain = itemView.findViewById<ImageView>(R.id.iv_rv_item)
         val ivHeart = itemView.findViewById<ImageView>(R.id.iv_heart)
         val ivStar = itemView.findViewById<ImageView>(R.id.iv_star)
-        val tvStar = itemView.findViewById<TextView>(R.id.tv_stars)
+        val tvHeart = itemView.findViewById<TextView>(R.id.tv_hearts)
 
         fun bind(photo: Photo) {
             ivMain.setImageBitmap(photo.bitmap)
-            tvStar.text = photo.likes.toString()
-            ivStar.setImageResource(if(photo.likes > 0) R.drawable.ic_star else R.drawable.ic_star_border)
-            ivHeart.setImageResource(if(photo.isFavourite) R.drawable.ic_heart_solid else R.drawable.ic_heart)
+            tvHeart.text = photo.likes.toString()
+            ivHeart.setImageResource(if(photo.likes > 0) R.drawable.ic_heart_solid else R.drawable.ic_heart)
+            ivStar.setImageResource(if(photo.isFavourite) R.drawable.ic_star else R.drawable.ic_star_border)
         }
     }
 }

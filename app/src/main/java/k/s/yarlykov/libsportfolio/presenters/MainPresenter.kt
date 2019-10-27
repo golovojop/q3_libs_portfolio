@@ -7,15 +7,7 @@ import k.s.yarlykov.libsportfolio.repository.IPhotoRepository
 @InjectViewState
 class MainPresenter : MvpPresenter<IMainView>() {
 
-    private lateinit var repository : IPhotoRepository
-
-    fun setPhotoRepository(repository : IPhotoRepository) {
-        this.repository = repository
-
-    }
-
     fun onFabTapped() {
         viewState.onClickFabHandler()
     }
-
 }
