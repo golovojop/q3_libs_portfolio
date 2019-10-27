@@ -1,12 +1,9 @@
 package k.s.yarlykov.libsportfolio.repository
 
 import io.reactivex.Observable
-import k.s.yarlykov.libsportfolio.contracts.RepositoryContract
-import k.s.yarlykov.libsportfolio.contracts.StorageContract
 import k.s.yarlykov.libsportfolio.model.Photo
 
-class PhotoRepository(storage : StorageContract.ILocalStorage)
-    : RepositoryContract.IPhotoRepository {
+class PhotoRepository(storage : ILocalStorage) : IPhotoRepository {
 
     private val photoObservable = storage.connect()
 

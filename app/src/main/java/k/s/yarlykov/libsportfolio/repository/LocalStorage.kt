@@ -8,12 +8,11 @@ import io.reactivex.Observer
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
-import k.s.yarlykov.libsportfolio.contracts.StorageContract
 import k.s.yarlykov.libsportfolio.model.Photo
 import kotlin.random.Random
 
 class LocalStorage(private val context: Context, private val arrayId: Int, private val defaultDrawableId: Int) :
-    StorageContract.ILocalStorage {
+    ILocalStorage {
 
     override fun connect(): Observable<List<Photo>> {
         return loadCompletion.hide()

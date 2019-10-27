@@ -7,13 +7,14 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.GridLayoutManager
+import com.arellomobile.mvp.MvpAppCompatFragment
 import k.s.yarlykov.libsportfolio.*
 import k.s.yarlykov.libsportfolio.ui.GridItemDecoration
 import k.s.yarlykov.libsportfolio.ui.RVAdapter
 import kotlinx.android.synthetic.main.fragment_base.*
 import java.util.*
 
-class TabFragment : Fragment() {
+class TabFragment : MvpAppCompatFragment() {
 
     companion object {
 
@@ -26,12 +27,12 @@ class TabFragment : Fragment() {
         }
     }
 
-    var season = CATEGORY.REGULAR
+    var category = CATEGORY.REGULAR
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedtate: Bundle?) : View? {
 
         val layoutId = arguments?.getBundle(KEY_BUNDLE)!!.let { bundle ->
-            season = bundle.getSerializable(KEY_SEASON) as CATEGORY
+            category = bundle.getParcelable(KEY_CATEGORY) as CATEGORY
             bundle.getInt(KEY_LAYOUT_ID)
         }
 
@@ -53,7 +54,7 @@ class TabFragment : Fragment() {
                 recycle()
             }
         }
-        Collections.rotate(stuffPics, 12 - season.ordinal * 3)
+        Collections.rotate(stuffPics, 12 - category.ordinal * 3)
         initRecycleView(stuffPics)
     }
 
