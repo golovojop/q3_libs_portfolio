@@ -11,13 +11,15 @@ class PortfolioApp : Application(), IRepositoryHelper {
 
     override fun onCreate() {
         super.onCreate()
-        photoRepository = PhotoRepository(
-            LocalStorage(
-                applicationContext,
-                R.array.month_pics,
-                R.drawable.bkg_05_may
-            )
-        )
+
+        LocalStorage(
+            applicationContext,
+            R.array.month_pics,
+            R.drawable.bkg_05_may
+        ).apply {
+            doUpload()
+            photoRepository = PhotoRepository(this)
+        }
     }
 
     override fun getPhotoRepository(): PhotoRepository = photoRepository

@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import io.reactivex.Observable
 import io.reactivex.Observer
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
@@ -33,7 +34,10 @@ class LocalStorage(private val context: Context, private val arrayId: Int, priva
     }
 
     fun doUpload() {
-        createPhotoObservable().subscribe(photoObserver)
+        createPhotoObservable()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(photoObserver)
     }
 
     // Step 3

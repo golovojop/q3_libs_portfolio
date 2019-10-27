@@ -4,17 +4,21 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.GridLayoutManager
 import com.arellomobile.mvp.MvpAppCompatFragment
+import com.arellomobile.mvp.presenter.InjectPresenter
+import com.arellomobile.mvp.presenter.ProvidePresenter
 import k.s.yarlykov.libsportfolio.*
+import k.s.yarlykov.libsportfolio.application.IRepositoryHelper
+import k.s.yarlykov.libsportfolio.model.Photo
+import k.s.yarlykov.libsportfolio.presenters.ITabFragment
+import k.s.yarlykov.libsportfolio.presenters.TabPresenter
 import k.s.yarlykov.libsportfolio.ui.GridItemDecoration
-import k.s.yarlykov.libsportfolio.ui.RVAdapter
+import k.s.yarlykov.libsportfolio.ui.PhotoRvAdapter
 import kotlinx.android.synthetic.main.fragment_base.*
-import java.util.*
 
-class TabFragment : MvpAppCompatFragment() {
+class TabFragment : MvpAppCompatFragment(), ITabFragment {
 
     companion object {
 
@@ -25,6 +29,14 @@ class TabFragment : MvpAppCompatFragment() {
                 }
             }
         }
+    }
+
+    @InjectPresenter
+    lateinit var presenter : TabPresenter
+
+    @ProvidePresenter
+    fun providePresenter() : TabPresenter {
+        return TabPresenter()
     }
 
     var category = CATEGORY.REGULAR
@@ -41,32 +53,26 @@ class TabFragment : MvpAppCompatFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        loadData()
-    }
 
-    private fun loadData() {
-        val stuffPics = with(resources.obtainTypedArray(R.array.month_pics)) {
+        initRecycleView()
 
-            mutableListOf<Int>().also { li ->
-                (0 until length()).forEach { i ->
-                    li.add(i, getResourceId(i, R.drawable.bkg_01_jan))
-                }
-                recycle()
-            }
+        activity?.let {
+            presenter.setPhotoRepository((it.applicationContext as IRepositoryHelper).getPhotoRepository())
         }
-        Collections.rotate(stuffPics, 12 - category.ordinal * 3)
-        initRecycleView(stuffPics)
     }
 
-    private fun initRecycleView(data : List<Int>) {
+    private fun initRecycleView() {
 
-        recycle_view.apply {
+        recycleView.apply {
             setHasFixedSize(true)
             addItemDecoration(GridItemDecoration(2))
             itemAnimator = DefaultItemAnimator()
             layoutManager = GridLayoutManager(activity?.applicationContext, 2)
-            adapter = RVAdapter(data, R.layout.layout_rv_item)
+            adapter = PhotoRvAdapter(R.layout.layout_rv_item)
         }
+    }
 
+    override fun updateContent(photos: List<Photo>) {
+        (recycleView.adapter as PhotoRvAdapter).updateModel(photos)
     }
 }
