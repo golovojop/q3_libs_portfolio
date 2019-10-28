@@ -15,7 +15,7 @@ class PhotoRepository(storage : ILocalStorage) : IPhotoRepository {
         return photoObservable
             .map {list ->
                 list.filter {photo ->
-                    photo.isFavourite
+                    photo.isFavorite
                 }
             }
     }

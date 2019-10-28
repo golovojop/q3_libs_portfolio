@@ -44,7 +44,7 @@ class PhotoRvAdapter(private val itemResourceId: Int) : RecyclerView.Adapter<Pho
             ivMain.setImageBitmap(photo.bitmap)
             tvHeart.text = photo.likes.toString()
             ivHeart.setImageResource(if(photo.likes > 0) R.drawable.ic_heart_solid else R.drawable.ic_heart)
-            ivStar.setImageResource(if(photo.isFavourite) R.drawable.ic_star else R.drawable.ic_star_border)
+            ivStar.setImageResource(if(photo.isFavorite) R.drawable.ic_star else R.drawable.ic_star_border)
         }
     }
 }

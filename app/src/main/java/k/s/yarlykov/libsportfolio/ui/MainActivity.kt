@@ -16,7 +16,7 @@ import k.s.yarlykov.libsportfolio.KEY_LAYOUT_ID
 import k.s.yarlykov.libsportfolio.R
 import k.s.yarlykov.libsportfolio.presenters.IMainView
 import k.s.yarlykov.libsportfolio.presenters.MainPresenter
-import k.s.yarlykov.libsportfolio.ui.fragments.FavouritesTabFragment
+import k.s.yarlykov.libsportfolio.ui.fragments.FavoritesTabFragment
 import k.s.yarlykov.libsportfolio.ui.fragments.GalleryTabFragment
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -41,7 +41,7 @@ class MainActivity : MvpAppCompatActivity(), IMainView {
         val fragmentPagerAdapter = CustomFragmentPagerAdapter(supportFragmentManager)
 
         fragmentPagerAdapter.addFragment(createFragment(CONTENT.GALLERY), getString(R.string.tab_text_1))
-        fragmentPagerAdapter.addFragment(createFragment(CONTENT.FAVOURITES), getString(R.string.tab_text_2))
+        fragmentPagerAdapter.addFragment(createFragment(CONTENT.FAVORITES), getString(R.string.tab_text_2))
 
         viewPager.adapter = fragmentPagerAdapter
         tabs.setupWithViewPager(viewPager)
@@ -55,10 +55,10 @@ class MainActivity : MvpAppCompatActivity(), IMainView {
     private fun createFragment(content : CONTENT, layoutId : Int = R.layout.fragment_base) : Fragment {
 
         return when(content) {
-            CONTENT.FAVOURITES -> {
+            CONTENT.FAVORITES -> {
                 with(Bundle()) {
                     putInt(KEY_LAYOUT_ID, layoutId)
-                    FavouritesTabFragment.create(this)
+                    FavoritesTabFragment.create(this)
                 }
             }
             CONTENT.GALLERY -> {

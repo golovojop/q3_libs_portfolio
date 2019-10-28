@@ -5,5 +5,4 @@ import k.s.yarlykov.libsportfolio.model.Photo
 
 interface ITabFragment : MvpView {
     fun updateContent(photos: List<Photo>)
-
 }

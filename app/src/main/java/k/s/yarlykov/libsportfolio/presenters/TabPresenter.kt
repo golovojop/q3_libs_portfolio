@@ -19,7 +19,7 @@ class TabPresenter : MvpPresenter<ITabFragment>() {
         this.repository = repository
 
         val disposable = when(content) {
-            CONTENT.FAVOURITES -> repository.loadFavourites()
+            CONTENT.FAVORITES -> repository.loadFavourites()
             CONTENT.GALLERY -> repository.loadGallery()
         }.subscribe(::updateView)
     }
