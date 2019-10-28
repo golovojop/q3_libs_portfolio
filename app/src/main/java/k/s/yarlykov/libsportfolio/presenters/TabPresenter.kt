@@ -2,9 +2,12 @@ package k.s.yarlykov.libsportfolio.presenters
 
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
+import io.reactivex.Observable
+import io.reactivex.subjects.BehaviorSubject
 import k.s.yarlykov.libsportfolio.CONTENT
 import k.s.yarlykov.libsportfolio.model.Photo
 import k.s.yarlykov.libsportfolio.repository.IPhotoRepository
+import java.util.*
 
 @InjectViewState
 class TabPresenter : MvpPresenter<ITabFragment>() {
@@ -15,16 +18,12 @@ class TabPresenter : MvpPresenter<ITabFragment>() {
         this.content = content
     }
 
-    fun setPhotoRepository(repository : IPhotoRepository) {
+    fun setPhotoRepository(repository : IPhotoRepository) : Observable<List<Photo>> {
         this.repository = repository
 
-        val disposable = when(content) {
+        return when(content) {
             CONTENT.FAVORITES -> repository.loadFavourites()
             CONTENT.GALLERY -> repository.loadGallery()
-        }.subscribe(::updateView)
-    }
-
-    private fun updateView(photos: List<Photo>) {
-        viewState.updateContent(photos)
+        }
     }
 }

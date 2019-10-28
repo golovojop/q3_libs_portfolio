@@ -10,6 +10,7 @@ import com.arellomobile.mvp.MvpAppCompatFragment
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.arellomobile.mvp.presenter.ProvidePresenterTag
+import io.reactivex.disposables.CompositeDisposable
 import k.s.yarlykov.libsportfolio.*
 import k.s.yarlykov.libsportfolio.application.IRepositoryHelper
 import k.s.yarlykov.libsportfolio.model.Photo
@@ -21,7 +22,9 @@ import kotlinx.android.synthetic.main.fragment_base.*
 
 abstract class TabFragment : MvpAppCompatFragment(), ITabFragment {
 
-    abstract val contentType : CONTENT
+    abstract val contentType: CONTENT
+
+    val disposables = CompositeDisposable()
 
     @InjectPresenter
     open lateinit var presenter: TabPresenter
@@ -51,8 +54,18 @@ abstract class TabFragment : MvpAppCompatFragment(), ITabFragment {
         initRecycleView()
 
         activity?.let {
-            presenter.setPhotoRepository((it.applicationContext as IRepositoryHelper).getPhotoRepository())
+
+            disposables.add(
+                presenter
+                    .setPhotoRepository((it.applicationContext as IRepositoryHelper).getPhotoRepository())
+                    .subscribe(::updateContent)
+            )
         }
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        disposables.clear()
     }
 
     private fun initRecycleView() {
