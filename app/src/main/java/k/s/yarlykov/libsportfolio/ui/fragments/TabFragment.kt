@@ -65,7 +65,7 @@ abstract class TabFragment : MvpAppCompatFragment(), ITabFragment {
 
     override fun onDetach() {
         super.onDetach()
-        disposables.clear()
+        disposables.dispose()
     }
 
     private fun initRecycleView() {
