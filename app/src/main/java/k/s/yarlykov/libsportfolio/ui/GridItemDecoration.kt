@@ -1,4 +1,4 @@
-package k.s.yarlykov.libsportfolio
+package k.s.yarlykov.libsportfolio.ui
 
 import android.content.Context
 import android.graphics.Point
