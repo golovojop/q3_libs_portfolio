@@ -33,16 +33,12 @@ class InstagramFragment : MvpAppCompatFragment(), IInstagramFragment {
     lateinit var authRequestUri: String
     lateinit var webClient: InstagramWebClient
 
-    val disposables = CompositeDisposable()
+    private val disposables = CompositeDisposable()
 
     private val layerContent = 0
     private val layerLoading = 1
-    private val POSITION_EMPTY = 2
 
     private val authBaseUri = "https://api.instagram.com/oauth/authorize/"
-    val TOKENURL = "https://api.instagram.com/oauth/access_token"
-    val APIURL = "https://api.instagram.com/v1"
-    val CALLBACKURL = "https://www.instagram.com/"
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val layoutId = arguments?.getBundle(KEY_BUNDLE)!!.let { bundle ->
@@ -55,8 +51,6 @@ class InstagramFragment : MvpAppCompatFragment(), IInstagramFragment {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        animator.displayedChild = layerContent
-
         authRequestUri = authBaseUri +
                 "?app_id=${getString(R.string.app_id)}" +
                 "&redirect_uri=${getString(R.string.app_redirect_uri)}" +
@@ -65,7 +59,6 @@ class InstagramFragment : MvpAppCompatFragment(), IInstagramFragment {
         webClient = InstagramWebClient()
 
         presenter.onViewCreated()
-
     }
 
     override fun onDestroy() {
@@ -73,7 +66,7 @@ class InstagramFragment : MvpAppCompatFragment(), IInstagramFragment {
         disposables.dispose()
     }
 
-    override fun showLoading() {
+    override fun startLoading() {
         animator.displayedChild = layerLoading
 
         disposables.add(webClient
@@ -91,7 +84,15 @@ class InstagramFragment : MvpAppCompatFragment(), IInstagramFragment {
         }
     }
 
+    override fun showLoading() {
+        animator.displayedChild = layerLoading
+    }
+
     override fun showContent() {
         animator.displayedChild = layerContent
+    }
+
+    override fun showMedia(uri : String) {
+        webView.loadUrl(uri)
     }
 }

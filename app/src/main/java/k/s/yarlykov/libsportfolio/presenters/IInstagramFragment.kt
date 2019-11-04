@@ -5,6 +5,8 @@ import com.arellomobile.mvp.MvpView
 interface IInstagramFragment : MvpView {
 
     fun showLoading()
+    fun startLoading()
     fun showContent()
+    fun showMedia(uri : String)
 
 }

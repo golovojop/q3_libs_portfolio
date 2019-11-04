@@ -25,5 +25,7 @@
         <item name="tabTextAppearance">@style/TextAppearance.Design.Tab</item>
         <item name="tabSelectedTextColor">?android:textColorPrimary</item>
     </style>
-
+    <style name="CircularProgress" parent="Theme.AppCompat.Light">
+        <item name="colorAccent">?attr/colorPrimaryDark</item>
+    </style>
 </resources>
