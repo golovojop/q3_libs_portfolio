@@ -1,4 +1,4 @@
-package k.s.yarlykov.libsportfolio.repository
+package k.s.yarlykov.libsportfolio.repository.localstorage
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -44,7 +44,10 @@ class LocalStorage(private val context: Context, private val arrayId: Int, priva
     private fun createPhotoObservable(): Observable<Photo> {
         return createBitmapObservable()
             .map { (id, bitmap) ->
-                Photo(id, bitmap, addLikes(), setFavouriteStatus())
+                Photo(id, bitmap,
+                    addLikes(),
+                    setFavouriteStatus()
+                )
             }
     }
 

@@ -18,6 +18,7 @@ import k.s.yarlykov.libsportfolio.presenters.IMainView
 import k.s.yarlykov.libsportfolio.presenters.MainPresenter
 import k.s.yarlykov.libsportfolio.ui.fragments.FavoritesTabFragment
 import k.s.yarlykov.libsportfolio.ui.fragments.GalleryTabFragment
+import k.s.yarlykov.libsportfolio.ui.fragments.InstagramFragment
 import kotlinx.android.synthetic.main.activity_main.*
 
 
@@ -42,12 +43,15 @@ class MainActivity : MvpAppCompatActivity(), IMainView {
 
         fragmentPagerAdapter.addFragment(createFragment(CONTENT.GALLERY), getString(R.string.tab_text_1))
         fragmentPagerAdapter.addFragment(createFragment(CONTENT.FAVORITES), getString(R.string.tab_text_2))
+        fragmentPagerAdapter.addFragment(createFragment(CONTENT.INSTAGRAM, R.layout.fragment_instagram),
+            getString(R.string.tab_text_3))
 
         viewPager.adapter = fragmentPagerAdapter
         tabs.setupWithViewPager(viewPager)
 
         tabs.getTabAt(0)?.icon = getDrawable(R.drawable.ic_photo_library)
         tabs.getTabAt(1)?.icon = getDrawable(R.drawable.ic_photo_favourites)
+        tabs.getTabAt(2)?.icon = getDrawable(R.drawable.ic_instagram_logo)
 
         tabs.tabGravity = TabLayout.GRAVITY_FILL
     }
@@ -65,6 +69,12 @@ class MainActivity : MvpAppCompatActivity(), IMainView {
                 with(Bundle()) {
                     putInt(KEY_LAYOUT_ID, layoutId)
                     GalleryTabFragment.create(this)
+                }
+            }
+            CONTENT.INSTAGRAM -> {
+                with(Bundle()) {
+                    putInt(KEY_LAYOUT_ID, layoutId)
+                    InstagramFragment.create(this)
                 }
             }
         }

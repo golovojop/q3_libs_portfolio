@@ -11,5 +11,9 @@
     
     <string name="tab_text_1">gallery</string>
     <string name="tab_text_2">favorites</string>
+    <string name="tab_text_3">instagram</string>
     <string name="like_count">0</string>
-    <string name="star_count">0</string></resources>
+    <string name="star_count">0</string>
+    <string name="loading">Loading</string>
+</resources>
+

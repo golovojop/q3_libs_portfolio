@@ -3,7 +3,7 @@ package k.s.yarlykov.libsportfolio
 import android.util.Log
 
 enum class CONTENT {
-    GALLERY, FAVORITES
+    GALLERY, FAVORITES,INSTAGRAM
 }
 
 const val KEY_BUNDLE = "KEY_BUNDLE"

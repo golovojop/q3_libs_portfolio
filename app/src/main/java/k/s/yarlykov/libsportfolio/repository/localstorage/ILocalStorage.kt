@@ -1,4 +1,4 @@
-package k.s.yarlykov.libsportfolio.repository
+package k.s.yarlykov.libsportfolio.repository.localstorage
 
 import io.reactivex.Observable
 import k.s.yarlykov.libsportfolio.model.Photo

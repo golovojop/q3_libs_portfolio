@@ -1,11 +1,11 @@
-package k.s.yarlykov.libsportfolio.instagram.repo
+package k.s.yarlykov.libsportfolio.repository.instagram
 
 import android.util.Log
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import io.reactivex.Observable
 import io.reactivex.subjects.BehaviorSubject
-import k.s.yarlykov.libsportfolio.instagram.network.Api
-import k.s.yarlykov.libsportfolio.instagram.network.InstagramToken
+import k.s.yarlykov.libsportfolio.instagram.network.InstagramApi
+import k.s.yarlykov.libsportfolio.model.instagram.InstagramToken
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -15,12 +15,11 @@ object InstagramRepo : IInstagramRepo {
     private const val baseUrl = "https://api.instagram.com/"
     private const val HTTP_OK = 200
 
-
-    private val appDataHolder = BehaviorSubject.create<Pair<String, String>>()
+    private val appCredentialsHolder = BehaviorSubject.create<Pair<String, String>>()
     private val api = initApiAdapter()
 
     private val dataSource: Observable<InstagramToken> =
-        appDataHolder
+        appCredentialsHolder
             .switchMap { (code, secret) ->
                 Log.d("APP_T", "switchMap:: $code, $secret")
 
@@ -41,13 +40,12 @@ object InstagramRepo : IInstagramRepo {
                 }
             }
 
-    override fun requestToken(data : Pair<String, String>) : Observable<InstagramToken> {
-        Log.d("APP_T", "requestToken(): $data")
-        appDataHolder.onNext(data)
+    override fun requestToken(appCode: String, appSecret: String) : Observable<InstagramToken> {
+        appCredentialsHolder.onNext(Pair(appCode, appSecret))
         return dataSource
     }
 
-    private fun initApiAdapter(): Api {
+    private fun initApiAdapter(): InstagramApi {
         // Установить таймауты
         val okHttpClient = OkHttpClient().newBuilder()
             .connectTimeout(5, TimeUnit.SECONDS)
@@ -62,6 +60,6 @@ object InstagramRepo : IInstagramRepo {
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .build()
 
-        return adapter.create(Api::class.java)
+        return adapter.create(InstagramApi::class.java)
     }
 }

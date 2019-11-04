@@ -1,4 +1,4 @@
-package k.s.yarlykov.libsportfolio.instagram.network;
+package k.s.yarlykov.libsportfolio.model.instagram;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

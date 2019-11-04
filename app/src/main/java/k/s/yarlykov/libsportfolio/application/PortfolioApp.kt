@@ -2,7 +2,7 @@ package k.s.yarlykov.libsportfolio.application
 
 import android.app.Application
 import k.s.yarlykov.libsportfolio.R
-import k.s.yarlykov.libsportfolio.repository.LocalStorage
+import k.s.yarlykov.libsportfolio.repository.localstorage.LocalStorage
 import k.s.yarlykov.libsportfolio.repository.PhotoRepository
 
 class PortfolioApp : Application(), IRepositoryHelper {
