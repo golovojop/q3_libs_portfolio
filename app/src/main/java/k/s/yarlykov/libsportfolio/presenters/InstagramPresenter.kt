@@ -16,39 +16,45 @@ import k.s.yarlykov.libsportfolio.repository.instagram.InstagramGraphHelper
 @InjectViewState
 class InstagramPresenter : MvpPresenter<IInstagramFragment>() {
 
-    private lateinit var applicationToken: String
+    private lateinit var appToken: String
+    private lateinit var appSecret: String
     private val uriImages = mutableListOf<String>()
 
-    fun onViewCreated() {
+    fun onViewCreated(appSecret: String) {
 
-        if (this::applicationToken.isInitialized) {
+        this.appSecret = appSecret
+
+        if (this::appToken.isInitialized) {
             logIt("InstagramPresenter::onViewCreated (has token)")
-            loadMediaData(applicationToken)
+            loadMediaData(appToken)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(mediaDataUriObserver)
         } else {
             logIt("InstagramPresenter::onViewCreated (no token)")
+            viewState.onFrontWebView()
             viewState.showAuthWebPage()
         }
     }
 
-    fun onAppCodeReceived(appCode: String, appSecret: String) {
+    fun onAppCodeReceived(appCode: String) {
 
-        viewState.showProgressBar()
+        if (!this::appToken.isInitialized) {
+            viewState.onFrontProgressBar()
 
-        InstagramAuthHelper
-            // Получить токен
-            .requestToken(appCode, appSecret)
-            .subscribeOn(Schedulers.io())
-            .doOnNext { token ->
-                applicationToken = token.accessToken
-            }
-            .flatMap { token ->
-                loadMediaData(token.accessToken)
-            }
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(mediaDataUriObserver)
+            InstagramAuthHelper
+                // Получить токен
+                .requestToken(appCode, appSecret)
+                .subscribeOn(Schedulers.io())
+                .doOnNext { token ->
+                    appToken = token.accessToken
+                }
+                .flatMap { token ->
+                    loadMediaData(token.accessToken)
+                }
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(mediaDataUriObserver)
+        }
     }
 
     private fun loadMediaData(token: String): Observable<String> {
@@ -59,7 +65,7 @@ class InstagramPresenter : MvpPresenter<IInstagramFragment>() {
             }
             // Получить список медиа ресурсов в альбоме
             .flatMap { mediaAlbum ->
-                InstagramGraphHelper.requestMediaData(mediaAlbum.id, applicationToken)
+                InstagramGraphHelper.requestMediaData(mediaAlbum.id, appToken)
             }
     }
 
@@ -70,7 +76,7 @@ class InstagramPresenter : MvpPresenter<IInstagramFragment>() {
             logIt("onNext: $uri")
             uriImages.add(uri)
             viewState.updateMediaContent(uriImages)
-            viewState.showRecyclerView()
+            viewState.onFrontRecyclerView()
         }
 
         override fun onSubscribe(d: Disposable) {
@@ -81,7 +87,7 @@ class InstagramPresenter : MvpPresenter<IInstagramFragment>() {
         override fun onComplete() {
             d.dispose()
             viewState.updateMediaContent(uriImages)
-            viewState.showRecyclerView()
+            viewState.onFrontRecyclerView()
             logIt("mediaDataUriObserver: onComplete")
         }
 

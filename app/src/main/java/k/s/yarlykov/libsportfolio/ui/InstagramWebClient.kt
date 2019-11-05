@@ -7,12 +7,10 @@ import io.reactivex.Observable
 import io.reactivex.subjects.BehaviorSubject
 import k.s.yarlykov.libsportfolio.logIt
 
-class InstagramWebClient : WebViewClient() {
+class InstagramWebClient(val callback : (String) -> Unit) : WebViewClient() {
 
-    private val appCode = BehaviorSubject.create<String>()
-
-    fun getApplicationCode() : Observable<String> {
-        return appCode.hide()
+    init {
+        logIt("InstagramWebClient created")
     }
 
     override fun onPageFinished(view: WebView?, url: String?) {
@@ -23,16 +21,9 @@ class InstagramWebClient : WebViewClient() {
         url?.let {
             if(it.contains("?code=")) {
                 val uri = Uri.parse(it)
-                val code = uri.getQueryParameter("code")
-
-                code?.let {c ->
-                    if(appCode.value == null) {
-                        appCode.onNext(code)
-                    } else if (!appCode.value.equals(c, false)) {
-                        appCode.onNext(code)
-                    }
+                uri.getQueryParameter("code")?.let{code ->
+                    callback(code)
                 }
-                logIt("onPageFinished:: code = $code")
             }
         }
     }

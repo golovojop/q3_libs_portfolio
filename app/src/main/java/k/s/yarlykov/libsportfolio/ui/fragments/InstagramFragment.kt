@@ -12,6 +12,7 @@ import io.reactivex.disposables.CompositeDisposable
 import k.s.yarlykov.libsportfolio.KEY_BUNDLE
 import k.s.yarlykov.libsportfolio.KEY_LAYOUT_ID
 import k.s.yarlykov.libsportfolio.R
+import k.s.yarlykov.libsportfolio.logIt
 import k.s.yarlykov.libsportfolio.ui.InstagramWebClient
 import k.s.yarlykov.libsportfolio.presenters.IInstagramFragment
 import k.s.yarlykov.libsportfolio.presenters.InstagramPresenter
@@ -33,8 +34,6 @@ class InstagramFragment : MvpAppCompatFragment(), IInstagramFragment {
 
     @InjectPresenter
     lateinit var presenter: InstagramPresenter
-
-    lateinit var webClient: InstagramWebClient
 
     private val disposables = CompositeDisposable()
 
@@ -63,32 +62,24 @@ class InstagramFragment : MvpAppCompatFragment(), IInstagramFragment {
         super.onViewCreated(view, savedInstanceState)
 
         initRecycleView()
-        webClient = InstagramWebClient()
-        presenter.onViewCreated()
+        presenter.onViewCreated(getString(R.string.app_secret))
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        webView.clearHistory()
-        webView.clearCache(true)
         disposables.dispose()
     }
 
     override fun showAuthWebPage() {
 
-        // Подписаться на Application Code из WebViewClient
-        disposables.add(webClient
-            .getApplicationCode()
-            .subscribe { code ->
-                presenter.onAppCodeReceived(code, getString(R.string.app_secret))
-            })
+        logIt("InstagramFragment::showAuthWebPage()")
 
         // Начать авторизацию
         webView.apply {
             isVerticalScrollBarEnabled = false
             isHorizontalScrollBarEnabled = false
             settings.javaScriptEnabled = true
-            webViewClient = webClient
+            webViewClient = InstagramWebClient(presenter::onAppCodeReceived)
             loadUrl(authRequestUri)
         }
     }
@@ -104,15 +95,15 @@ class InstagramFragment : MvpAppCompatFragment(), IInstagramFragment {
         }
     }
 
-    override fun showProgressBar() {
+    override fun onFrontProgressBar() {
         animator.displayedChild = layerLoading
     }
 
-    override fun showWebView() {
+    override fun onFrontWebView() {
         animator.displayedChild = layerWebView
     }
 
-    override fun showRecyclerView() {
+    override fun onFrontRecyclerView() {
         animator.displayedChild = layerRecyclerView
     }
 
