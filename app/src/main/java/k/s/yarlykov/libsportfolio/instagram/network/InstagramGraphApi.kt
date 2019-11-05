@@ -1,8 +1,6 @@
 package k.s.yarlykov.libsportfolio.instagram.network
 
 import io.reactivex.Observable
-import k.s.yarlykov.libsportfolio.model.instagram.InstagramToken
-import k.s.yarlykov.libsportfolio.model.instagram.MediaFile
 import k.s.yarlykov.libsportfolio.model.instagram.MediaFileList
 import k.s.yarlykov.libsportfolio.model.instagram.MediaNode
 import retrofit2.Response

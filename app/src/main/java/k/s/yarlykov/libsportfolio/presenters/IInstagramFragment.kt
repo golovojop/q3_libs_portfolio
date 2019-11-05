@@ -8,7 +8,7 @@ interface IInstagramFragment : MvpView {
     fun showWebView()
     fun showRecyclerView()
 
-    fun showAuthPage()
+    fun showAuthWebPage()
     fun loadMediaContent(uri : String)
     fun updateMediaContent(uri : List<String>)
 }

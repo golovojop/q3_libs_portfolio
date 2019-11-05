@@ -13,23 +13,16 @@ object InstagramGraphHelper : IInstagramGraphHelper {
     private const val baseUrl = "https://graph.instagram.com/"
     private const val HTTP_OK = 200
 
-    private val api = initApiAdapter()
+    private val api by lazy { initApiAdapter() }
 
     override fun requestMediaEdge(token: String): Observable<MediaNode> {
 
         return api.queryUserMediaEdge(token)
             .switchMap { okHttpResponse ->
-                Observable.fromCallable {
-                    if (okHttpResponse.code() == HTTP_OK) {
-                        okHttpResponse.body()!!
-                    } else {
-
-                        /**
-                         * Temporary
-                         */
-                        MediaNode()
-                    }
+                if (okHttpResponse.code() != HTTP_OK) {
+                    throw Throwable("Cant' receive Media Edge node")
                 }
+                Observable.fromCallable {okHttpResponse.body()!!}
             }
     }
 

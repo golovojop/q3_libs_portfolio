@@ -9,7 +9,7 @@ public class MediaNode {
 
     @SerializedName("data")
     @Expose
-    public List<MediaAlbum> data = null;
+    public List<MediaAlbum> albums = null;
     @SerializedName("paging")
     @Expose
     public Paging paging;

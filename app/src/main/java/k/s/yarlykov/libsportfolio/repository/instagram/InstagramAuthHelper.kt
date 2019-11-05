@@ -15,7 +15,7 @@ object InstagramAuthHelper : IInstagramAuthHelper {
     private const val HTTP_OK = 200
 
     private val appCredentialsHolder = BehaviorSubject.create<Pair<String, String>>()
-    private val api = initApiAdapter()
+    private val api by lazy { initApiAdapter() }
 
     private val tokenObservable: Observable<InstagramToken> =
         appCredentialsHolder
@@ -28,17 +28,11 @@ object InstagramAuthHelper : IInstagramAuthHelper {
                 )
             }
             .flatMap { okHttpResponse ->
-                Observable.fromCallable {
-                    if (okHttpResponse.code() == HTTP_OK) {
-                        okHttpResponse.body()!!
-                    } else {
-
-                        /**
-                         * Temporary
-                         */
-                        InstagramToken()
-                    }
+                if (okHttpResponse.code() != HTTP_OK) {
+                    throw Throwable("Cant' receive security token")
                 }
+
+                Observable.fromCallable { okHttpResponse.body()!! }
             }
 
     override fun requestToken(appCode: String, appSecret: String): Observable<InstagramToken> {

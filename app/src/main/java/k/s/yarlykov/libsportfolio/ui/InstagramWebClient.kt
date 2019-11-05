@@ -1,4 +1,4 @@
-package k.s.yarlykov.libsportfolio.instagram
+package k.s.yarlykov.libsportfolio.ui
 
 import android.net.Uri
 import android.webkit.WebView
@@ -24,8 +24,15 @@ class InstagramWebClient : WebViewClient() {
             if(it.contains("?code=")) {
                 val uri = Uri.parse(it)
                 val code = uri.getQueryParameter("code")
+
+                code?.let {c ->
+                    if(appCode.value == null) {
+                        appCode.onNext(code)
+                    } else if (!appCode.value.equals(c, false)) {
+                        appCode.onNext(code)
+                    }
+                }
                 logIt("onPageFinished:: code = $code")
-                appCode.onNext(code!!)
             }
         }
     }
