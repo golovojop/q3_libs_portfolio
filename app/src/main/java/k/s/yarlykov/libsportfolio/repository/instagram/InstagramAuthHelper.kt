@@ -17,7 +17,7 @@ object InstagramAuthHelper : IInstagramAuthHelper {
     private val appCredentialsHolder = BehaviorSubject.create<Pair<String, String>>()
     private val api = initApiAdapter()
 
-    private val dataSource: Observable<InstagramToken> =
+    private val tokenObservable: Observable<InstagramToken> =
         appCredentialsHolder
             .switchMap { (code, secret) ->
                 api.tokenRequest(
@@ -43,7 +43,7 @@ object InstagramAuthHelper : IInstagramAuthHelper {
 
     override fun requestToken(appCode: String, appSecret: String): Observable<InstagramToken> {
         appCredentialsHolder.onNext(Pair(appCode, appSecret))
-        return dataSource
+        return tokenObservable
     }
 
     private fun initApiAdapter(): InstagramAuthApi {
