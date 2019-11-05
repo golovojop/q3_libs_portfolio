@@ -66,15 +66,16 @@ class InstagramFragment : MvpAppCompatFragment(), IInstagramFragment {
         disposables.dispose()
     }
 
-    override fun startLoading() {
-        animator.displayedChild = layerLoading
+    override fun showAuthPage() {
 
+        // Подписаться на Application Code из WebViewClient
         disposables.add(webClient
             .getApplicationCode()
             .subscribe { code ->
                 presenter.onAppCodeReceived(code, getString(R.string.app_secret))
             })
 
+        // Начать авторизацию
         webView.apply {
             isVerticalScrollBarEnabled = false
             isHorizontalScrollBarEnabled = false
@@ -84,15 +85,15 @@ class InstagramFragment : MvpAppCompatFragment(), IInstagramFragment {
         }
     }
 
-    override fun showLoading() {
+    override fun showProgressBar() {
         animator.displayedChild = layerLoading
     }
 
-    override fun showContent() {
+    override fun showWebView() {
         animator.displayedChild = layerContent
     }
 
-    override fun showMedia(uri : String) {
+    override fun loadMediaContent(uri : String) {
         webView.loadUrl(uri)
     }
 }

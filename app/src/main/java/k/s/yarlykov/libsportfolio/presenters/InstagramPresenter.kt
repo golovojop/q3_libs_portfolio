@@ -2,8 +2,10 @@ package k.s.yarlykov.libsportfolio.presenters
 
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
+import io.reactivex.MaybeObserver
 import io.reactivex.Observable
 import io.reactivex.Observer
+import io.reactivex.SingleObserver
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
@@ -17,52 +19,58 @@ class InstagramPresenter : MvpPresenter<IInstagramFragment>() {
     private lateinit var applicationToken: String
 
     fun onViewCreated() {
-        viewState.startLoading()
+        viewState.showAuthPage()
     }
 
     fun onAppCodeReceived(appCode: String, appSecret: String) {
-        viewState.showLoading()
 
-        logIt("code : $appCode")
+        viewState.showProgressBar()
 
         InstagramAuthHelper
+                // Получить токен
             .requestToken(appCode, appSecret)
             .subscribeOn(Schedulers.io())
+            .doOnNext{
+                logIt("token: ${it.accessToken}")
+            }
+                // Получить корневую ноду дерева медиаресурсов
             .flatMap { token ->
                 applicationToken = token.accessToken
                 InstagramGraphHelper.requestMediaEdge(applicationToken)
             }
+                // Получить список альбомов
             .flatMap { mediaNode ->
                 Observable.fromIterable(mediaNode.data)
             }
+                // Получить список медиа ресурсов в альбоме
             .flatMap { mediaAlbum ->
                 InstagramGraphHelper.requestMediaData(mediaAlbum.id, applicationToken)
             }
-            .take(1)
+                // Вернуть
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(mediaDataUriObserver)
     }
 
-
     private val mediaDataUriObserver = object : Observer<String> {
-
         lateinit var d: Disposable
 
-        override fun onComplete() {
-            d.dispose()
-            viewState.showContent()
+        override fun onNext(uri : String) {
+            logIt("onNext: $uri")
+//            viewState.loadMediaContent(uri)
+//            viewState.showWebView()
         }
 
         override fun onSubscribe(d: Disposable) {
             this.d = d
         }
 
-        override fun onNext(uri: String) {
-            viewState.showMedia(uri)
+        override fun onComplete() {
+            d.dispose()
+            logIt("mediaDataUriObserver: onComplete")
         }
 
         override fun onError(e: Throwable) {
-            logIt("mediaDataUriObserver:: ${e.message}")
+            logIt("mediaDataUriObserver: onError '${e.message}'")
         }
     }
 }

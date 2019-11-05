@@ -39,7 +39,7 @@ object InstagramGraphHelper : IInstagramGraphHelper {
             .flatMap { okHttpResponse ->
                 Observable.fromIterable(
                     if (okHttpResponse.code() == HTTP_OK) {
-                        okHttpResponse.body()!!.data.map { mediaFile -> mediaFile.permalink }
+                        okHttpResponse.body()!!.data.map { mediaFile -> mediaFile.mediaUrl }
                     } else {
                         emptyList()
                     }
