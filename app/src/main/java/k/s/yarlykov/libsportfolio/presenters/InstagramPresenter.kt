@@ -2,8 +2,6 @@ package k.s.yarlykov.libsportfolio.presenters
 
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
-import com.arellomobile.mvp.viewstate.strategy.SkipStrategy
-import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
 import io.reactivex.Observable
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -12,7 +10,7 @@ import io.reactivex.schedulers.Schedulers
 import k.s.yarlykov.libsportfolio.logIt
 import k.s.yarlykov.libsportfolio.repository.instagram.InstagramAuthHelper
 import k.s.yarlykov.libsportfolio.repository.instagram.InstagramGraphHelper
-@StateStrategyType(value = SkipStrategy::class)
+
 @InjectViewState
 class InstagramPresenter : MvpPresenter<IInstagramFragment>() {
 
@@ -37,6 +35,7 @@ class InstagramPresenter : MvpPresenter<IInstagramFragment>() {
         }
     }
 
+    // Callback из webview с аутентификацией
     fun onAppCodeReceived(appCode: String) {
 
         if (!this::appToken.isInitialized) {
@@ -46,9 +45,11 @@ class InstagramPresenter : MvpPresenter<IInstagramFragment>() {
                 // Получить токен
                 .requestToken(appCode, appSecret)
                 .subscribeOn(Schedulers.io())
+                // Сохранить токен
                 .doOnNext { token ->
                     appToken = token.accessToken
                 }
+                // Загрузить медиа файлы
                 .flatMap { token ->
                     loadMediaData(token.accessToken)
                 }

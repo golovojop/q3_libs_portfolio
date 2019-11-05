@@ -16,6 +16,5 @@ interface IInstagramFragment : MvpView {
     fun onFrontRecyclerView()
 
     fun showAuthWebPage()
-    fun loadMediaContent(uri : String)
     fun updateMediaContent(uri : List<String>)
 }

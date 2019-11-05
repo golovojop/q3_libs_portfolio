@@ -107,10 +107,6 @@ class InstagramFragment : MvpAppCompatFragment(), IInstagramFragment {
         animator.displayedChild = layerRecyclerView
     }
 
-    override fun loadMediaContent(uri: String) {
-        webView.loadUrl(uri)
-    }
-
     override fun updateMediaContent(uri: List<String>) {
         (rvPics.adapter as InstagramRvAdapter).updateModel(uri)
     }
