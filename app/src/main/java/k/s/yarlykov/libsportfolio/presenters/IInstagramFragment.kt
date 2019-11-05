@@ -5,7 +5,10 @@ import com.arellomobile.mvp.MvpView
 interface IInstagramFragment : MvpView {
 
     fun showProgressBar()
-    fun showAuthPage()
     fun showWebView()
+    fun showRecyclerView()
+
+    fun showAuthPage()
     fun loadMediaContent(uri : String)
+    fun updateMediaContent(uri : List<String>)
 }

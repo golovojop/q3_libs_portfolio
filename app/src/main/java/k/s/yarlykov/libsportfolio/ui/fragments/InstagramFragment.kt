@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.GridLayoutManager
 import com.arellomobile.mvp.MvpAppCompatFragment
 import com.arellomobile.mvp.presenter.InjectPresenter
 import io.reactivex.disposables.CompositeDisposable
@@ -11,8 +13,13 @@ import k.s.yarlykov.libsportfolio.KEY_BUNDLE
 import k.s.yarlykov.libsportfolio.KEY_LAYOUT_ID
 import k.s.yarlykov.libsportfolio.R
 import k.s.yarlykov.libsportfolio.instagram.InstagramWebClient
+import k.s.yarlykov.libsportfolio.model.Photo
 import k.s.yarlykov.libsportfolio.presenters.IInstagramFragment
 import k.s.yarlykov.libsportfolio.presenters.InstagramPresenter
+import k.s.yarlykov.libsportfolio.ui.GridItemDecoration
+import k.s.yarlykov.libsportfolio.ui.InstagramRvAdapter
+import k.s.yarlykov.libsportfolio.ui.PhotoRvAdapter
+import kotlinx.android.synthetic.main.fragment_base.*
 import kotlinx.android.synthetic.main.fragment_instagram.*
 
 class InstagramFragment : MvpAppCompatFragment(), IInstagramFragment {
@@ -35,8 +42,9 @@ class InstagramFragment : MvpAppCompatFragment(), IInstagramFragment {
 
     private val disposables = CompositeDisposable()
 
-    private val layerContent = 0
+    private val layerWebView = 0
     private val layerLoading = 1
+    private val layerRecyclerView = 2
 
     private val authBaseUri = "https://api.instagram.com/oauth/authorize/"
 
@@ -57,6 +65,8 @@ class InstagramFragment : MvpAppCompatFragment(), IInstagramFragment {
                 "&scope=user_profile,user_media&response_type=code"
 
         webClient = InstagramWebClient()
+
+        initRecycleView()
 
         presenter.onViewCreated()
     }
@@ -85,15 +95,34 @@ class InstagramFragment : MvpAppCompatFragment(), IInstagramFragment {
         }
     }
 
+    private fun initRecycleView() {
+
+        rvPics.apply {
+            setHasFixedSize(true)
+            addItemDecoration(GridItemDecoration(2))
+            itemAnimator = DefaultItemAnimator()
+            layoutManager = GridLayoutManager(activity?.applicationContext, 2)
+            adapter = InstagramRvAdapter(R.layout.layout_instagram_rv_item)
+        }
+    }
+
     override fun showProgressBar() {
         animator.displayedChild = layerLoading
     }
 
     override fun showWebView() {
-        animator.displayedChild = layerContent
+        animator.displayedChild = layerWebView
     }
 
     override fun loadMediaContent(uri : String) {
         webView.loadUrl(uri)
+    }
+
+    override fun showRecyclerView() {
+        animator.displayedChild = layerRecyclerView
+    }
+
+    override fun updateMediaContent(uri : List<String>) {
+        (rvPics.adapter as InstagramRvAdapter).updateModel(uri)
     }
 }

@@ -32,7 +32,8 @@ class PhotoRvAdapter(private val itemResourceId: Int) : RecyclerView.Adapter<Pho
     override fun getItemCount(): Int = model.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(model[position])    }
+        holder.bind(model[position])
+    }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val ivMain = itemView.findViewById<ImageView>(R.id.iv_rv_item)
@@ -43,8 +44,8 @@ class PhotoRvAdapter(private val itemResourceId: Int) : RecyclerView.Adapter<Pho
         fun bind(photo: Photo) {
             ivMain.setImageBitmap(photo.bitmap)
             tvHeart.text = photo.likes.toString()
-            ivHeart.setImageResource(if(photo.likes > 0) R.drawable.ic_heart_solid else R.drawable.ic_heart)
-            ivStar.setImageResource(if(photo.isFavorite) R.drawable.ic_star else R.drawable.ic_star_border)
+            ivHeart.setImageResource(if (photo.likes > 0) R.drawable.ic_heart_solid else R.drawable.ic_heart)
+            ivStar.setImageResource(if (photo.isFavorite) R.drawable.ic_star else R.drawable.ic_star_border)
         }
     }
 }

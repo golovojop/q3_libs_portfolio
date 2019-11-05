@@ -17,6 +17,7 @@ import k.s.yarlykov.libsportfolio.repository.instagram.InstagramGraphHelper
 class InstagramPresenter : MvpPresenter<IInstagramFragment>() {
 
     private lateinit var applicationToken: String
+    private val uriImages = mutableListOf<String>()
 
     fun onViewCreated() {
         viewState.showAuthPage()
@@ -56,16 +57,22 @@ class InstagramPresenter : MvpPresenter<IInstagramFragment>() {
 
         override fun onNext(uri : String) {
             logIt("onNext: $uri")
+            uriImages.add(uri)
+            viewState.updateMediaContent(uriImages)
+            viewState.showRecyclerView()
 //            viewState.loadMediaContent(uri)
 //            viewState.showWebView()
         }
 
         override fun onSubscribe(d: Disposable) {
+            uriImages.clear()
             this.d = d
         }
 
         override fun onComplete() {
             d.dispose()
+            viewState.updateMediaContent(uriImages)
+            viewState.showRecyclerView()
             logIt("mediaDataUriObserver: onComplete")
         }
 
