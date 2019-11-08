@@ -2,6 +2,7 @@ package k.s.yarlykov.libsportfolio.repository
 
 import io.reactivex.Observable
 import k.s.yarlykov.libsportfolio.model.Photo
+import k.s.yarlykov.libsportfolio.repository.localstorage.ILocalStorage
 
 class PhotoRepository(storage : ILocalStorage) : IPhotoRepository {
 
