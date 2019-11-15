@@ -7,29 +7,42 @@
 package k.s.yarlykov.libsportfolio.ui
 
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import com.arellomobile.mvp.MvpAppCompatActivity
-import com.arellomobile.mvp.presenter.InjectPresenter
 import com.google.android.material.tabs.TabLayout
 import k.s.yarlykov.libsportfolio.CONTENT
 import k.s.yarlykov.libsportfolio.KEY_LAYOUT_ID
 import k.s.yarlykov.libsportfolio.R
+import k.s.yarlykov.libsportfolio.application.PortfolioApp
+import k.s.yarlykov.libsportfolio.di.component.DaggerMainActivityComponent
+import k.s.yarlykov.libsportfolio.di.module.MainActivityModule
 import k.s.yarlykov.libsportfolio.presenters.IMainView
 import k.s.yarlykov.libsportfolio.presenters.MainPresenter
 import k.s.yarlykov.libsportfolio.ui.fragments.FavoritesTabFragment
 import k.s.yarlykov.libsportfolio.ui.fragments.GalleryTabFragment
 import k.s.yarlykov.libsportfolio.ui.fragments.InstagramFragment
 import kotlinx.android.synthetic.main.activity_main.*
+import javax.inject.Inject
 
 
-class MainActivity : MvpAppCompatActivity(), IMainView {
+class MainActivity : AppCompatActivity(), IMainView {
 
-    @InjectPresenter
+    @Inject
     lateinit var presenter : MainPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        val component = DaggerMainActivityComponent
+            .builder()
+            .activityModule(MainActivityModule())
+            .addDependency((application as PortfolioApp).appComponent)
+            .bindActivity(this)
+            .build()
+
+        component.inject(this)
+
 
         fab.setOnClickListener {
             presenter.onFabTapped()
