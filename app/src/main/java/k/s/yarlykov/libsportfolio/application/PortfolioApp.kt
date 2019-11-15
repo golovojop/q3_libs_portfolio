@@ -11,10 +11,25 @@ import k.s.yarlykov.libsportfolio.repository.PhotoRepository
 
 class PortfolioApp : Application(), IRepositoryHelper {
 
-    private lateinit var photoRepository: PhotoRepository
-
-    val appModule: AppModule by lazy(LazyThreadSafetyMode.NONE) {
+    private val appModule: AppModule by lazy(LazyThreadSafetyMode.NONE) {
         AppModule(this)
+    }
+
+
+    private val netModule: NetworkModule by lazy(LazyThreadSafetyMode.NONE) {
+        NetworkModule()
+    }
+
+    private val photoRepo: PhotoRepository by lazy(LazyThreadSafetyMode.NONE) {
+        PhotoRepository(
+            LocalStorage(
+                applicationContext,
+                R.array.month_pics,
+                R.drawable.bkg_05_may
+            ).apply {
+                doUpload()
+            }
+        )
     }
 
     val appComponent: AppComponent by lazy(LazyThreadSafetyMode.NONE) {
@@ -26,22 +41,5 @@ class PortfolioApp : Application(), IRepositoryHelper {
             .build()
     }
 
-    val netModule: NetworkModule by lazy(LazyThreadSafetyMode.NONE) {
-        NetworkModule()
-    }
-
-    override fun onCreate() {
-        super.onCreate()
-
-        LocalStorage(
-            applicationContext,
-            R.array.month_pics,
-            R.drawable.bkg_05_may
-        ).apply {
-            doUpload()
-            photoRepository = PhotoRepository(this)
-        }
-    }
-
-    override fun getPhotoRepository(): PhotoRepository = photoRepository
+    override fun getPhotoRepository(): PhotoRepository = photoRepo
 }

@@ -6,6 +6,7 @@ import com.google.gson.Gson
 import dagger.Component
 import k.s.yarlykov.libsportfolio.di.module.app.AppModule
 import k.s.yarlykov.libsportfolio.di.module.app.NetworkModule
+import k.s.yarlykov.libsportfolio.repository.PhotoRepository
 import okhttp3.OkHttpClient
 import retrofit2.CallAdapter
 import javax.inject.Singleton
@@ -21,4 +22,5 @@ interface AppComponent {
     fun getGson() : Gson
     fun getOkHttpClient() : OkHttpClient
     fun getCallAdapterFactory() : CallAdapter.Factory
+    fun getPhotoRepository() : PhotoRepository
 }
