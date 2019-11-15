@@ -1,4 +1,4 @@
-package k.s.yarlykov.libsportfolio.ui
+package k.s.yarlykov.libsportfolio.ui.adapters
 
 import android.view.LayoutInflater
 import android.view.View

@@ -1,4 +1,4 @@
-package k.s.yarlykov.libsportfolio.ui
+package k.s.yarlykov.libsportfolio.ui.adapters
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager

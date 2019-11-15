@@ -4,6 +4,8 @@ import android.app.Application
 import android.content.Context
 import com.google.gson.Gson
 import dagger.Component
+import k.s.yarlykov.libsportfolio.di.component.MainActivityComponent
+import k.s.yarlykov.libsportfolio.di.module.MainActivityModule
 import k.s.yarlykov.libsportfolio.di.module.app.AppModule
 import k.s.yarlykov.libsportfolio.di.module.app.NetworkModule
 import k.s.yarlykov.libsportfolio.repository.PhotoRepository
@@ -22,5 +24,6 @@ interface AppComponent {
     fun getGson() : Gson
     fun getOkHttpClient() : OkHttpClient
     fun getCallAdapterFactory() : CallAdapter.Factory
+
     fun getPhotoRepository() : PhotoRepository
 }

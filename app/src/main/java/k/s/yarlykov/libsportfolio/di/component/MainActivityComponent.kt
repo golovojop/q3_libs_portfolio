@@ -6,6 +6,7 @@ import k.s.yarlykov.libsportfolio.di.component.app.AppComponent
 import k.s.yarlykov.libsportfolio.di.module.app.AppModule
 import k.s.yarlykov.libsportfolio.di.module.MainActivityModule
 import k.s.yarlykov.libsportfolio.di.scope.MainActivityScope
+import k.s.yarlykov.libsportfolio.repository.PhotoRepository
 import k.s.yarlykov.libsportfolio.ui.MainActivity
 
 @MainActivityScope
@@ -13,6 +14,8 @@ import k.s.yarlykov.libsportfolio.ui.MainActivity
 interface MainActivityComponent {
 
     fun inject(activity: MainActivity)
+
+    fun getPhotoRepository() : PhotoRepository
 
     /**
      * Правила написания кастомного билдера компонента
