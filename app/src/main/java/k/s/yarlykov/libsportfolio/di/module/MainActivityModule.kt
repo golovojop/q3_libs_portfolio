@@ -10,7 +10,6 @@ import k.s.yarlykov.libsportfolio.repository.PhotoRepository
 import k.s.yarlykov.libsportfolio.ui.MainActivity
 import k.s.yarlykov.libsportfolio.ui.fragments.FavoritesTabFragment
 import k.s.yarlykov.libsportfolio.ui.fragments.GalleryTabFragment
-import k.s.yarlykov.libsportfolio.ui.fragments.TabFragment
 import javax.inject.Named
 
 @Module
@@ -35,7 +34,7 @@ class MainActivityModule {
         return if (presenters.containsKey(key)) {
             presenters[key] as TabPresenter
         } else {
-            TabPresenter(photoRepository)
+            TabPresenter(fragment, photoRepository)
         }
     }
 
@@ -50,14 +49,7 @@ class MainActivityModule {
         return if (presenters.containsKey(key)) {
             presenters[key] as TabPresenter
         } else {
-            TabPresenter(photoRepository)
+            TabPresenter(fragment, photoRepository)
         }
     }
-
-//    @Provides
-//    @Named("favorites")
-//    @MainActivityScope
-//    fun provideFavoritesFragmentPresenter() : IBasePresenter {
-//    }
-
 }

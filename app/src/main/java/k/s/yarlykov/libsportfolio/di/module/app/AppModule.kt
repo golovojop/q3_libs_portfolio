@@ -42,6 +42,8 @@ class AppModule(private val application: Application) {
 
     @Provides
     @Singleton
-    fun providePhotoRepository(localStorage: LocalStorage): PhotoRepository =
-        PhotoRepository(localStorage)
+    fun providePhotoRepository(localStorage: LocalStorage): PhotoRepository {
+        localStorage.doUpload()
+        return PhotoRepository(localStorage)
+    }
 }

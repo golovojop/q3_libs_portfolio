@@ -42,7 +42,6 @@ class GalleryTabFragment : TabFragment() {
 
         component.inject(this)
 
-        presenter.setContentType(contentType)
-        presenter.getPhotoObservable().subscribe(photoObserver)
+        presenter.onViewCreated(contentType)
     }
 }

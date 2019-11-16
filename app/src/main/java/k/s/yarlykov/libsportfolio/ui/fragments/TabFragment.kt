@@ -7,9 +7,10 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.GridLayoutManager
-import io.reactivex.Observer
-import io.reactivex.disposables.Disposable
-import k.s.yarlykov.libsportfolio.*
+import k.s.yarlykov.libsportfolio.CONTENT
+import k.s.yarlykov.libsportfolio.KEY_BUNDLE
+import k.s.yarlykov.libsportfolio.KEY_LAYOUT_ID
+import k.s.yarlykov.libsportfolio.R
 import k.s.yarlykov.libsportfolio.di.component.MainActivityComponent
 import k.s.yarlykov.libsportfolio.di.module.MainActivityModule
 import k.s.yarlykov.libsportfolio.model.Photo
@@ -37,6 +38,15 @@ abstract class TabFragment : Fragment(), ITabFragment {
         initRecycleView()
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        presenter.onDestroyView()
+    }
+
+    override fun updateContent(photos: List<Photo>) {
+        (recycleView.adapter as PhotoRvAdapter).updateModel(photos)
+    }
+
     private fun initRecycleView() {
 
         recycleView.apply {
@@ -46,27 +56,5 @@ abstract class TabFragment : Fragment(), ITabFragment {
             layoutManager = GridLayoutManager(activity?.applicationContext, 2)
             adapter = PhotoRvAdapter(R.layout.layout_rv_item)
         }
-    }
-
-    val photoObserver = object : Observer<List<Photo>> {
-        override fun onComplete() {
-            logIt("${this@TabFragment::class.java.simpleName}::contentObserver onComplete")
-        }
-
-        override fun onSubscribe(d: Disposable) {
-            logIt("ffffffffffffffffffff")
-        }
-
-        override fun onNext(photos: List<Photo>) {
-            updateContent(photos)
-        }
-
-        override fun onError(e: Throwable) {
-            logIt("${this@TabFragment::class.java.simpleName}::contentObserver ${e.message.toString()}")
-        }
-    }
-
-    override fun updateContent(photos: List<Photo>) {
-        (recycleView.adapter as PhotoRvAdapter).updateModel(photos)
     }
 }
