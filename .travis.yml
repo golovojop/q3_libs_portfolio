@@ -1,71 +1,36 @@
 language: android
-sudo: required
+
 jdk: oraclejdk8
 
-env:
- global:
- - ANDROID_API=28
- - EMULATOR_API_LEVEL=22
- - ANDROID_BUILD_TOOLS=28.0.1
- - ANDROID_ABI=google_apis/armeabi-v7a
- - ADB_INSTALL_TIMEOUT=5
- 
 android:
- components:
- - tools
- - platform-tools
- - build-tools-$ANDROID_BUILD_TOOLS
- - android-$ANDROID_API
- - android-$EMULATOR_API_LEVEL
-# 
- - extra-google-google_play_services
- - extra-google-m2repository
- - extra-android-m2repository
- - addon-google_apis-google-$ANDROID_API_LEVEL 
- #
- - sys-img-armeabi-v7a-addon-google_apis-google-$ANDROID_API_LEVEL
- - sys-img-armeabi-v7a-addon-google_apis-google-$EMULATOR_API_LEVEL
- 
-licenses:
-  - 'android-sdk-preview-license-.+'
-  - 'android-sdk-license-.+'
-  - 'google-gdk-license-.+'
- 
- 
-before_cache:
- - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
- - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+  components:
+  - platform-tools
+  - tools
+  - android-28
+  - build-tools-28.0.3
+  - extra-android-m2repository
 
-cache:
- directories:
- - $HOME/.gradle/caches/
- - $HOME/.gradle/wrapper/
+branches:
+  only:
+  - master
 
 before_install:
-- mkdir "$ANDROID_HOME/licenses" || true
-- echo -e "\n8933bad161af4178b1185d1a37fbf41ea5269c55" > "$ANDROID_HOME/licenses/android-sdk-license"
-- echo -e "\n84831b9409646a918e30573bab4c9c91346d8abd" > "$ANDROID_HOME/licenses/android-sdk-preview-license"
-- chmod +x gradlew
-- ./gradlew dependencies || true
+- yes | sdkmanager "platforms;android-28"
 
-#before_script:
-#- echo no | android create avd --force -n test -t android-22 --abi $ANDROID_ABI
-#- emulator -avd test -no-skin -no-audio -no-window &
-#- android-wait-for-emulator
-#- adb shell input keyevent 82 &
+install:
+  - chmod +x ./gradlew
+  - chmod +x ./autobuild/push-apk.sh
 
-#script:
-#- "./gradlew clean build connectedCheck -PdisablePreDex --stacktrace"
+script: ./gradlew clean assembleDebug
 
-script:
-  - ./gradlew build check
+after_success:
+  - ./autobuild/push-apk.sh
 
-deploy:
-  provider: debug
-  file: TestApp.apk
-  skip_cleanup: true
+notifications:
+  email:
+    on_success: change
+    on_failure: always
 
-  on:
-    repo: ciscoff/q3_libs_portfolio/tree/l6_di
-    tags: true
-    jdk: oraclejdk8
+env:
+  global:
+    secure: ZK74df8wCo7U3D/IgseESEpjOVCPUu1NNM+nYT6NcXo9dQQuhdDzL5tbOOVXFBieReaAbVo3XhEFs56hiV2N/qhnU7U6IvKZYb9pU4rBxabhbajU+QIeMi8WgusaudwPV+jAL4v5QlBS/se1bdkgI0Mj53gf0IfpUFL/AcXkCzHEbfdAYP4xUJc6IFqnxpcPd3MydnNTbOQPvCUAF3sdGmyu6AYOYGtIUZq82/IOYHRoQ6L1ra1SpxeWO+tnPWs3qEQdGpwQ47OKK+VJoYiWp7+AbYEBxirC0ycjokgiCPwcqLwunqdfv1Jm6NMmTZLfodAyT3yVVIv4GayixKk0Dkf3oarawHuygxQduD0ysh8Qn1a5Ioy0WDvdNDDM6YPm65U8YOEcQ3IidZ3V9h5rsspKUVEOsrthTwj63xOpzI0noTXhdLbJ84LKARF6OXHTN+etd6LUfEX1UOzoh6UwDwhCST0qah1TY0dez6eB8G2QrvPKYs2i1xFxcJ1Kq624ZrE5uIRPr2ZAmJSCk90bM5noA1S1AUAB65RJvR1wHmbac8qE64rLNBMc5TdTwOufksqZbYb+culZ/7+GMN+Urr+ju2jTWYQ33rxwE4S+dmC3dSJhXR+m6Hfov+i0QkUAnESqIJ6MI93BHW5T8AyjPQAa4mmpS+ciZRlhPuHvKNI=
