@@ -55,7 +55,13 @@ class MainActivity :
         activityComponent.inject(this)
 
         fab.setOnClickListener {
-            presenter.onFabTapped()
+
+            /**
+             * Crashlytics
+             */
+            throw NullPointerException("Crashlytics test")
+
+//            presenter.onFabTapped()
         }
 
         initTabs()

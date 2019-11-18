@@ -60,9 +60,9 @@ class InstagramFragment : MvpAppCompatFragment(), IInstagramFragment {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         initRecycleView()
         presenter.onViewCreated(getString(R.string.app_secret))
+
     }
 
     override fun onDestroy() {
