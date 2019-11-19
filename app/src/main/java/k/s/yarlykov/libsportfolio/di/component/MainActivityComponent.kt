@@ -1,19 +1,26 @@
 package k.s.yarlykov.libsportfolio.di.component
 
+import com.google.gson.Gson
 import dagger.BindsInstance
 import dagger.Component
 import k.s.yarlykov.libsportfolio.di.component.app.AppComponent
-import k.s.yarlykov.libsportfolio.di.module.app.AppModule
 import k.s.yarlykov.libsportfolio.di.module.MainActivityModule
 import k.s.yarlykov.libsportfolio.di.scope.MainActivityScope
 import k.s.yarlykov.libsportfolio.repository.PhotoRepository
 import k.s.yarlykov.libsportfolio.ui.MainActivity
+import okhttp3.OkHttpClient
+import retrofit2.CallAdapter
 
 @MainActivityScope
 @Component(modules = [MainActivityModule::class], dependencies = [AppComponent::class])
 interface MainActivityComponent {
 
     fun inject(activity: MainActivity)
+
+    fun getOkhttp3Cache() : okhttp3.Cache
+    fun getGson() : Gson
+    fun getOkHttpClient() : OkHttpClient
+    fun getCallAdapterFactory() : CallAdapter.Factory
 
     fun getPhotoRepository() : PhotoRepository
 

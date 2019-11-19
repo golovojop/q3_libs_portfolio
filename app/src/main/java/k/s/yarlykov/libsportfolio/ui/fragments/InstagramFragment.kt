@@ -7,13 +7,10 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.GridLayoutManager
-import com.arellomobile.mvp.presenter.InjectPresenter
 import io.reactivex.disposables.CompositeDisposable
 import k.s.yarlykov.libsportfolio.KEY_BUNDLE
 import k.s.yarlykov.libsportfolio.KEY_LAYOUT_ID
 import k.s.yarlykov.libsportfolio.R
-import k.s.yarlykov.libsportfolio.application.PortfolioApp
-import k.s.yarlykov.libsportfolio.di.component.DaggerGalleryFragmentComponent
 import k.s.yarlykov.libsportfolio.di.component.DaggerInstagramComponent
 import k.s.yarlykov.libsportfolio.di.module.instagram.InstagramModule
 import k.s.yarlykov.libsportfolio.logIt
@@ -66,13 +63,15 @@ class InstagramFragment : Fragment(), IInstagramFragment {
         super.onViewCreated(view, savedInstanceState)
         initRecycleView()
 
+        val parent = activity as ParentDependencies
+
         val component = DaggerInstagramComponent
             .builder()
             .instagramModule(
                 InstagramModule(
                     getString(R.string.auth_end_point),
                     getString(R.string.graph_end_point)))
-            .addDependency((activity!!.application as PortfolioApp).appComponent)
+            .addDependency(parent.getComponent())
             .bindFragment(this)
             .build()
 

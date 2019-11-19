@@ -1,10 +1,6 @@
 package k.s.yarlykov.libsportfolio.di.module.instagram
 
-import android.app.Application
-import com.google.gson.FieldNamingPolicy
 import com.google.gson.Gson
-import com.google.gson.GsonBuilder
-import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import dagger.Module
 import dagger.Provides
 import k.s.yarlykov.libsportfolio.di.scope.InstagramScope
@@ -16,44 +12,14 @@ import k.s.yarlykov.libsportfolio.repository.instagram.IInstagramGraphHelper
 import k.s.yarlykov.libsportfolio.repository.instagram.InstagramAuthHelper
 import k.s.yarlykov.libsportfolio.repository.instagram.InstagramGraphHelper
 import k.s.yarlykov.libsportfolio.ui.fragments.InstagramFragment
-import okhttp3.Cache
 import okhttp3.OkHttpClient
 import retrofit2.CallAdapter
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.util.concurrent.TimeUnit
 import javax.inject.Named
 
 @Module
-open class InstagramModule(private val authUri: String, private val graphUri: String) {
-
-    @Provides
-    @InstagramScope
-    fun provideOkHttpCache(application: Application): Cache =
-        Cache(application.cacheDir, (10 * 1024).toLong())
-
-    @Provides
-    @InstagramScope
-    fun provideGson(): Gson =
-        GsonBuilder().apply {
-            setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-        }.create()
-
-    @Provides
-    @InstagramScope
-    fun provideOkHttpClient(cache: Cache): OkHttpClient =
-        OkHttpClient()
-            .newBuilder()
-            .cache(cache)
-            .connectTimeout(5, TimeUnit.SECONDS)
-            .readTimeout(10, TimeUnit.SECONDS)
-            .writeTimeout(10, TimeUnit.SECONDS)
-            .build()
-
-    @Provides
-    @InstagramScope
-    fun provideCallAdapterFactory(): CallAdapter.Factory =
-        RxJava2CallAdapterFactory.create()
+class InstagramModule(private val authUri: String, private val graphUri: String) {
 
     @Provides
     @InstagramScope

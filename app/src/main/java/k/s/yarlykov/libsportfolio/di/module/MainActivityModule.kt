@@ -36,12 +36,6 @@ class MainActivityModule {
         }
 
         return presenters[key] as TabPresenter
-
-//        return if (presenters.containsKey(key)) {
-//            presenters[key] as TabPresenter
-//        } else {
-//            TabPresenter(fragment, photoRepository)
-//        }
     }
 
     @FragmentScope
@@ -57,12 +51,5 @@ class MainActivityModule {
         }
 
         return presenters[key] as TabPresenter
-
-//        return if (presenters.containsKey(key)) {
-//            presenters[key] as TabPresenter
-//        } else {
-//            TabPresenter(fragment, photoRepository)
-//        }
     }
-
 }
