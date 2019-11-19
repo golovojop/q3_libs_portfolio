@@ -31,11 +31,17 @@ class MainActivityModule {
 
         val key = fragment::class.java.simpleName
 
-        return if (presenters.containsKey(key)) {
-            presenters[key] as TabPresenter
-        } else {
-            TabPresenter(fragment, photoRepository)
+        if (!presenters.containsKey(key)) {
+            presenters[key] = TabPresenter(fragment, photoRepository)
         }
+
+        return presenters[key] as TabPresenter
+
+//        return if (presenters.containsKey(key)) {
+//            presenters[key] as TabPresenter
+//        } else {
+//            TabPresenter(fragment, photoRepository)
+//        }
     }
 
     @FragmentScope
@@ -46,10 +52,17 @@ class MainActivityModule {
         photoRepository: PhotoRepository): TabPresenter {
         val key = fragment::class.java.simpleName
 
-        return if (presenters.containsKey(key)) {
-            presenters[key] as TabPresenter
-        } else {
-            TabPresenter(fragment, photoRepository)
+        if (!presenters.containsKey(key)) {
+            presenters[key] = TabPresenter(fragment, photoRepository)
         }
+
+        return presenters[key] as TabPresenter
+
+//        return if (presenters.containsKey(key)) {
+//            presenters[key] as TabPresenter
+//        } else {
+//            TabPresenter(fragment, photoRepository)
+//        }
     }
+
 }

@@ -37,7 +37,7 @@ class PortfolioApp : Application(), IRepositoryHelper {
         DaggerAppComponent
             .builder()
             .appModule(appModule)
-            .networkModule(netModule)
+//            .networkModule(netModule)
             .build()
     }
 

@@ -1,24 +1,27 @@
 package k.s.yarlykov.libsportfolio.presenters
 
-import com.arellomobile.mvp.InjectViewState
-import com.arellomobile.mvp.MvpPresenter
 import io.reactivex.Observable
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import k.s.yarlykov.libsportfolio.logIt
+import k.s.yarlykov.libsportfolio.repository.instagram.IInstagramAuthHelper
+import k.s.yarlykov.libsportfolio.repository.instagram.IInstagramGraphHelper
 import k.s.yarlykov.libsportfolio.repository.instagram.InstagramAuthHelper
 import k.s.yarlykov.libsportfolio.repository.instagram.InstagramGraphHelper
+import javax.inject.Inject
 
-@InjectViewState
-class InstagramPresenter : MvpPresenter<IInstagramFragment>() {
+class InstagramPresenter(
+    private val fragment: IInstagramFragment,
+    private val authHelper : IInstagramAuthHelper,
+    private val graphHelper: IInstagramGraphHelper) : IInstagramPresenter {
 
     private lateinit var appToken: String
     private lateinit var appSecret: String
     private val uriImages = mutableListOf<String>()
 
-    fun onViewCreated(appSecret: String) {
+    override fun onViewCreated(appSecret: String) {
 
         this.appSecret = appSecret
 
@@ -30,18 +33,18 @@ class InstagramPresenter : MvpPresenter<IInstagramFragment>() {
                 .subscribe(mediaDataUriObserver)
         } else {
             logIt("InstagramPresenter::onViewCreated (no token)")
-            viewState.onFrontWebView()
-            viewState.showAuthWebPage()
+            fragment.onFrontWebView()
+            fragment.showAuthWebPage()
         }
     }
 
     // Callback из webview с аутентификацией
-    fun onAppCodeReceived(appCode: String) {
+    override fun onAppCodeReceived(appCode: String) {
 
         if (!this::appToken.isInitialized) {
-            viewState.onFrontProgressBar()
+            fragment.onFrontProgressBar()
 
-            InstagramAuthHelper
+            authHelper
                 // Получить токен
                 .requestToken(appCode, appSecret)
                 .subscribeOn(Schedulers.io())
@@ -59,14 +62,14 @@ class InstagramPresenter : MvpPresenter<IInstagramFragment>() {
     }
 
     private fun loadMediaData(token: String): Observable<String> {
-        return InstagramGraphHelper
+        return graphHelper
             .requestMediaEdge(token)
             .flatMap { mediaNode ->
                 Observable.fromIterable(mediaNode.albums)
             }
             // Получить список медиа ресурсов в альбоме
             .flatMap { mediaAlbum ->
-                InstagramGraphHelper.requestMediaData(mediaAlbum.id, appToken)
+                graphHelper.requestMediaData(mediaAlbum.id, appToken)
             }
     }
 
@@ -76,8 +79,8 @@ class InstagramPresenter : MvpPresenter<IInstagramFragment>() {
         override fun onNext(uri: String) {
             logIt("onNext: $uri")
             uriImages.add(uri)
-            viewState.updateMediaContent(uriImages)
-            viewState.onFrontRecyclerView()
+            fragment.updateMediaContent(uriImages)
+            fragment.onFrontRecyclerView()
         }
 
         override fun onSubscribe(d: Disposable) {
@@ -87,8 +90,8 @@ class InstagramPresenter : MvpPresenter<IInstagramFragment>() {
 
         override fun onComplete() {
             d.dispose()
-            viewState.updateMediaContent(uriImages)
-            viewState.onFrontRecyclerView()
+            fragment.updateMediaContent(uriImages)
+            fragment.onFrontRecyclerView()
             logIt("mediaDataUriObserver: onComplete")
         }
 

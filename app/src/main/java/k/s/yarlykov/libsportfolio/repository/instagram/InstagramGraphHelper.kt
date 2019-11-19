@@ -9,29 +9,28 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
-object InstagramGraphHelper : IInstagramGraphHelper {
-    private const val baseUrl = "https://graph.instagram.com/"
-    private const val HTTP_OK = 200
+class InstagramGraphHelper(private val api : InstagramGraphApi) : IInstagramGraphHelper {
+//    private const val baseUrl = "https://graph.instagram.com/"
 
-    private val api by lazy { initApiAdapter() }
+//    private val api by lazy { initApiAdapter() }
 
     override fun requestMediaEdge(token: String): Observable<MediaNode> {
 
         return api.queryUserMediaEdge(token)
             .switchMap { okHttpResponse ->
-                if (okHttpResponse.code() != HTTP_OK) {
+                if (!okHttpResponse.isSuccessful) {
                     throw Throwable("Cant' receive Media Edge node")
                 }
                 Observable.fromCallable {okHttpResponse.body()!!}
             }
     }
 
-    fun requestMediaData(nodeId: String, token: String): Observable<String> {
+    override fun requestMediaData(nodeId: String, token: String): Observable<String> {
 
         return api.requestAlbumContents(nodeId, token)
             .flatMap { okHttpResponse ->
                 Observable.fromIterable(
-                    if (okHttpResponse.code() == HTTP_OK) {
+                    if (okHttpResponse.isSuccessful) {
                         okHttpResponse.body()!!.data.map { mediaFile -> mediaFile.mediaUrl }
                     } else {
                         emptyList()
@@ -39,22 +38,22 @@ object InstagramGraphHelper : IInstagramGraphHelper {
                 )
             }
     }
-
-    private fun initApiAdapter(): InstagramGraphApi {
-        // Установить таймауты
-        val okHttpClient = OkHttpClient().newBuilder()
-            .connectTimeout(5, TimeUnit.SECONDS)
-            .readTimeout(10, TimeUnit.SECONDS)
-            .writeTimeout(10, TimeUnit.SECONDS)
-            .build()
-
-        val adapter = Retrofit.Builder()
-            .baseUrl(baseUrl)
-            .client(okHttpClient)
-            .addConverterFactory(GsonConverterFactory.create())
-            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-            .build()
-
-        return adapter.create(InstagramGraphApi::class.java)
-    }
+//
+//    private fun initApiAdapter(): InstagramGraphApi {
+//        // Установить таймауты
+//        val okHttpClient = OkHttpClient().newBuilder()
+//            .connectTimeout(5, TimeUnit.SECONDS)
+//            .readTimeout(10, TimeUnit.SECONDS)
+//            .writeTimeout(10, TimeUnit.SECONDS)
+//            .build()
+//
+//        val adapter = Retrofit.Builder()
+//            .baseUrl(baseUrl)
+//            .client(okHttpClient)
+//            .addConverterFactory(GsonConverterFactory.create())
+//            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+//            .build()
+//
+//        return adapter.create(InstagramGraphApi::class.java)
+//    }
 }

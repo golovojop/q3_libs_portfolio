@@ -14,16 +14,16 @@ import retrofit2.CallAdapter
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules=[AppModule::class, NetworkModule::class])
+@Component(modules=[AppModule::class/*, NetworkModule::class*/])
 
 interface AppComponent {
     fun getContext() : Context
     fun getApplication() : Application
 
-    fun getOkhttp3Cache() : okhttp3.Cache
-    fun getGson() : Gson
-    fun getOkHttpClient() : OkHttpClient
-    fun getCallAdapterFactory() : CallAdapter.Factory
+//    fun getOkhttp3Cache() : okhttp3.Cache
+//    fun getGson() : Gson
+//    fun getOkHttpClient() : OkHttpClient
+//    fun getCallAdapterFactory() : CallAdapter.Factory
 
     fun getPhotoRepository() : PhotoRepository
 }

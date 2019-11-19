@@ -41,7 +41,6 @@ class MainActivity :
     }
 
 
-
     @Inject
     lateinit var presenter: MainPresenter
 
