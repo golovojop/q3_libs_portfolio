@@ -7,6 +7,14 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
 android {
+    signingConfigs {
+        debug {
+            storeFile file('D:\\aps\\_key_store\\barabudev_keys.jks')
+            storePassword 'Jgfyf2004'
+            keyAlias = 'release'
+            keyPassword 'Jgfyf2004'
+        }
+    }
     androidExtensions {
         experimental = true
     }
