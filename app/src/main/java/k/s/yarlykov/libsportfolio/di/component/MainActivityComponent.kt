@@ -1,5 +1,6 @@
 package k.s.yarlykov.libsportfolio.di.component
 
+import android.content.Context
 import com.google.gson.Gson
 import dagger.BindsInstance
 import dagger.Component
@@ -16,6 +17,8 @@ import retrofit2.CallAdapter
 interface MainActivityComponent {
 
     fun inject(activity: MainActivity)
+
+    fun getContext() : Context
 
     fun getOkhttp3Cache() : okhttp3.Cache
     fun getGson() : Gson

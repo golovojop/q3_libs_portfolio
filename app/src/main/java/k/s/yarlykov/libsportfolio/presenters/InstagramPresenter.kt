@@ -8,18 +8,18 @@ import io.reactivex.schedulers.Schedulers
 import k.s.yarlykov.libsportfolio.logIt
 import k.s.yarlykov.libsportfolio.repository.instagram.IInstagramAuthHelper
 import k.s.yarlykov.libsportfolio.repository.instagram.IInstagramGraphHelper
-import k.s.yarlykov.libsportfolio.repository.instagram.InstagramAuthHelper
-import k.s.yarlykov.libsportfolio.repository.instagram.InstagramGraphHelper
-import javax.inject.Inject
 
 class InstagramPresenter(
     private val fragment: IInstagramFragment,
-    private val authHelper : IInstagramAuthHelper,
-    private val graphHelper: IInstagramGraphHelper) : IInstagramPresenter {
+    private val authHelper: IInstagramAuthHelper,
+    private val graphHelper: IInstagramGraphHelper,
+    private val authRequestUri: String
+) : IInstagramPresenter {
 
     private lateinit var appToken: String
     private lateinit var appSecret: String
     private val uriImages = mutableListOf<String>()
+
 
     override fun onViewCreated(appSecret: String) {
 
@@ -34,7 +34,7 @@ class InstagramPresenter(
         } else {
             logIt("InstagramPresenter::onViewCreated (no token)")
             fragment.onFrontWebView()
-            fragment.showAuthWebPage()
+            fragment.showAuthWebPage(authRequestUri)
         }
     }
 

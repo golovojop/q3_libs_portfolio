@@ -1,5 +1,6 @@
 package k.s.yarlykov.libsportfolio.ui.fragments
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -7,7 +8,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.GridLayoutManager
-import io.reactivex.disposables.CompositeDisposable
 import k.s.yarlykov.libsportfolio.KEY_BUNDLE
 import k.s.yarlykov.libsportfolio.KEY_LAYOUT_ID
 import k.s.yarlykov.libsportfolio.R
@@ -37,18 +37,9 @@ class InstagramFragment : Fragment(), IInstagramFragment {
     @Inject
     lateinit var presenter: InstagramPresenter
 
-    private val disposables = CompositeDisposable()
-
     private val layerWebView = 0
     private val layerLoading = 1
     private val layerRecyclerView = 2
-
-    private val authRequestUri by lazy(LazyThreadSafetyMode.NONE) {
-        getString(R.string.auth_base_uri) +
-                "?app_id=${getString(R.string.app_id)}" +
-                "&redirect_uri=${getString(R.string.app_redirect_uri)}" +
-                "&scope=user_profile,user_media&response_type=code"
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -59,11 +50,10 @@ class InstagramFragment : Fragment(), IInstagramFragment {
         return inflater.inflate(layoutId, container, false)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        initRecycleView()
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
 
-        val parent = activity as ParentDependencies
+        val parent = context as ParentDependencies
 
         val component = DaggerInstagramComponent
             .builder()
@@ -76,17 +66,15 @@ class InstagramFragment : Fragment(), IInstagramFragment {
             .build()
 
         component.inject(this)
+    }
 
-
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initRecycleView()
         presenter.onViewCreated(getString(R.string.app_secret))
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        disposables.dispose()
-    }
-
-    override fun showAuthWebPage() {
+    override fun showAuthWebPage(authRequestUri : String) {
 
         logIt("InstagramFragment::showAuthWebPage()")
 

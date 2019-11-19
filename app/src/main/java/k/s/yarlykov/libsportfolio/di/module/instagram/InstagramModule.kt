@@ -1,8 +1,10 @@
 package k.s.yarlykov.libsportfolio.di.module.instagram
 
+import android.content.Context
 import com.google.gson.Gson
 import dagger.Module
 import dagger.Provides
+import k.s.yarlykov.libsportfolio.R
 import k.s.yarlykov.libsportfolio.di.scope.InstagramScope
 import k.s.yarlykov.libsportfolio.instagram.network.InstagramAuthApi
 import k.s.yarlykov.libsportfolio.instagram.network.InstagramGraphApi
@@ -74,11 +76,20 @@ class InstagramModule(private val authUri: String, private val graphUri: String)
 
     @Provides
     @InstagramScope
+    fun provideAuthRequestUri(context: Context): String =
+        context.getString(R.string.auth_base_uri) +
+                "?app_id=${context.getString(R.string.app_id)}" +
+                "&redirect_uri=${context.getString(R.string.app_redirect_uri)}" +
+                "&scope=user_profile,user_media&response_type=code"
+
+    @Provides
+    @InstagramScope
     fun provideInstagramPresenter(
         fragment: InstagramFragment,
         authHelper: IInstagramAuthHelper,
-        graphHelper: IInstagramGraphHelper
+        graphHelper: IInstagramGraphHelper,
+        authRequestUri: String
     ): InstagramPresenter {
-        return InstagramPresenter(fragment, authHelper, graphHelper)
+        return InstagramPresenter(fragment, authHelper, graphHelper, authRequestUri)
     }
 }

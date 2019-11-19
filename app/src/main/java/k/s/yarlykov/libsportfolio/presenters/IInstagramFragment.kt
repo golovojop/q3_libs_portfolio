@@ -6,6 +6,6 @@ interface IInstagramFragment {
     fun onFrontWebView()
     fun onFrontRecyclerView()
 
-    fun showAuthWebPage()
+    fun showAuthWebPage(authRequestUri : String)
     fun updateMediaContent(uri : List<String>)
 }
