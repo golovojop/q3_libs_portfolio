@@ -9,11 +9,14 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
-import k.s.yarlykov.libsportfolio.model.Photo
+import k.s.yarlykov.libsportfolio.domain.room.Photo
 import kotlin.random.Random
 
-class LocalStorage(private val context: Context, private val arrayId: Int, private val defaultDrawableId: Int) :
-    ILocalStorage {
+class LocalStorage(
+    private val context: Context,
+    private val arrayId: Int,
+    private val defaultDrawableId: Int
+) : ILocalStorage {
 
     override fun connect(): Observable<List<Photo>> {
         return loadCompletion.hide()
@@ -29,24 +32,27 @@ class LocalStorage(private val context: Context, private val arrayId: Int, priva
         update()
     }
 
-    private fun update() {
-        loadCompletion.onNext(memoryCache.values.toList())
-    }
-
-    fun doUpload() {
+    override fun doUpload() {
         createPhotoObservable()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(photoObserver)
     }
 
+    private fun update() {
+        loadCompletion.onNext(memoryCache.values.toList())
+    }
+
     // Step 3
     private fun createPhotoObservable(): Observable<Photo> {
         return createBitmapObservable()
             .map { (id, bitmap) ->
-                Photo(id, bitmap,
+                Photo(
+                    id,         // ID ресурса картинки использовать как ID в базе
+                    "",
+                    setFavouriteStatus(),
                     addLikes(),
-                    setFavouriteStatus()
+                    bitmap
                 )
             }
     }
@@ -61,7 +67,10 @@ class LocalStorage(private val context: Context, private val arrayId: Int, priva
         return createBitmapIdObservable()
             .subscribeOn(Schedulers.io())
             .map { drawableId ->
-                Pair(drawableId, BitmapFactory.decodeResource(context.resources, drawableId, options))
+                Pair(
+                    drawableId,
+                    BitmapFactory.decodeResource(context.resources, drawableId, options)
+                )
             }
     }
 

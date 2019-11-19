@@ -1,11 +1,9 @@
 package k.s.yarlykov.libsportfolio.presenters
 
 import io.reactivex.Observable
-import io.reactivex.Observer
 import io.reactivex.disposables.Disposable
 import k.s.yarlykov.libsportfolio.CONTENT
-import k.s.yarlykov.libsportfolio.logIt
-import k.s.yarlykov.libsportfolio.model.Photo
+import k.s.yarlykov.libsportfolio.domain.room.Photo
 import k.s.yarlykov.libsportfolio.repository.IPhotoRepository
 
 class TabPresenter(

@@ -1,7 +1,5 @@
 package k.s.yarlykov.libsportfolio.presenters
 
-import com.arellomobile.mvp.MvpView
-
-interface IMainView : MvpView {
+interface IMainView {
     fun onClickFabHandler()
 }

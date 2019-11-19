@@ -1,7 +1,7 @@
 package k.s.yarlykov.libsportfolio.repository
 
 import io.reactivex.Observable
-import k.s.yarlykov.libsportfolio.model.Photo
+import k.s.yarlykov.libsportfolio.domain.room.Photo
 
 interface IPhotoRepository {
     fun loadGallery() : Observable<List<Photo>>

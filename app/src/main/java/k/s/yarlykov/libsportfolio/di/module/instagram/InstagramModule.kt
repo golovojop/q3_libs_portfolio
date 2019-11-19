@@ -6,8 +6,8 @@ import dagger.Module
 import dagger.Provides
 import k.s.yarlykov.libsportfolio.R
 import k.s.yarlykov.libsportfolio.di.scope.InstagramScope
-import k.s.yarlykov.libsportfolio.instagram.network.InstagramAuthApi
-import k.s.yarlykov.libsportfolio.instagram.network.InstagramGraphApi
+import k.s.yarlykov.libsportfolio.data.network.InstagramAuthApi
+import k.s.yarlykov.libsportfolio.data.network.InstagramGraphApi
 import k.s.yarlykov.libsportfolio.presenters.InstagramPresenter
 import k.s.yarlykov.libsportfolio.repository.instagram.IInstagramAuthHelper
 import k.s.yarlykov.libsportfolio.repository.instagram.IInstagramGraphHelper

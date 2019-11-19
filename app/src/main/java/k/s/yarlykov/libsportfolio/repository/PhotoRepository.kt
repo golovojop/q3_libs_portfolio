@@ -1,10 +1,14 @@
 package k.s.yarlykov.libsportfolio.repository
 
 import io.reactivex.Observable
-import k.s.yarlykov.libsportfolio.model.Photo
+import k.s.yarlykov.libsportfolio.domain.room.Photo
 import k.s.yarlykov.libsportfolio.repository.localstorage.ILocalStorage
 
 class PhotoRepository(storage : ILocalStorage) : IPhotoRepository {
+
+    init {
+        storage.doUpload()
+    }
 
     private val photoObservable by lazy (LazyThreadSafetyMode.NONE) {
         storage.connect()
@@ -18,7 +22,7 @@ class PhotoRepository(storage : ILocalStorage) : IPhotoRepository {
         return photoObservable
             .map {list ->
                 list.filter {photo ->
-                    photo.isFavorite
+                    photo.favorite
                 }
             }
     }

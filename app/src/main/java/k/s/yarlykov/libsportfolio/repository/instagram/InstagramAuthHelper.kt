@@ -2,11 +2,10 @@ package k.s.yarlykov.libsportfolio.repository.instagram
 
 import io.reactivex.Observable
 import io.reactivex.subjects.BehaviorSubject
-import k.s.yarlykov.libsportfolio.instagram.network.InstagramAuthApi
-import k.s.yarlykov.libsportfolio.model.instagram.InstagramToken
+import k.s.yarlykov.libsportfolio.data.network.InstagramAuthApi
+import k.s.yarlykov.libsportfolio.domain.instagram.InstagramToken
 
 class InstagramAuthHelper (private val api : InstagramAuthApi) : IInstagramAuthHelper {
-//    private const val baseUrl = "https://api.instagram.com/"
 
     private val appCredentialsHolder = BehaviorSubject.create<Pair<String, String>>()
 

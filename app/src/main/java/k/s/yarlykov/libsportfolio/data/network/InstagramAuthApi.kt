@@ -1,7 +1,7 @@
-package k.s.yarlykov.libsportfolio.instagram.network
+package k.s.yarlykov.libsportfolio.data.network
 
 import io.reactivex.Observable
-import k.s.yarlykov.libsportfolio.model.instagram.InstagramToken
+import k.s.yarlykov.libsportfolio.domain.instagram.InstagramToken
 import retrofit2.Response
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded

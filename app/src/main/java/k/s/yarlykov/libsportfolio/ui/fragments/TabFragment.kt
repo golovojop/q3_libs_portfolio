@@ -13,7 +13,7 @@ import k.s.yarlykov.libsportfolio.KEY_LAYOUT_ID
 import k.s.yarlykov.libsportfolio.R
 import k.s.yarlykov.libsportfolio.di.component.MainActivityComponent
 import k.s.yarlykov.libsportfolio.di.module.MainActivityModule
-import k.s.yarlykov.libsportfolio.model.Photo
+import k.s.yarlykov.libsportfolio.domain.room.Photo
 import k.s.yarlykov.libsportfolio.presenters.ITabFragment
 import k.s.yarlykov.libsportfolio.presenters.TabPresenter
 import k.s.yarlykov.libsportfolio.ui.GridItemDecoration

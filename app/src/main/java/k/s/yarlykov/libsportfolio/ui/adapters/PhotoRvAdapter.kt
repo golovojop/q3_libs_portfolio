@@ -7,7 +7,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import k.s.yarlykov.libsportfolio.R
-import k.s.yarlykov.libsportfolio.model.Photo
+import k.s.yarlykov.libsportfolio.domain.room.Photo
 
 class PhotoRvAdapter(private val itemResourceId: Int) : RecyclerView.Adapter<PhotoRvAdapter.ViewHolder>() {
 
@@ -45,7 +45,7 @@ class PhotoRvAdapter(private val itemResourceId: Int) : RecyclerView.Adapter<Pho
             ivMain.setImageBitmap(photo.bitmap)
             tvHeart.text = photo.likes.toString()
             ivHeart.setImageResource(if (photo.likes > 0) R.drawable.ic_heart_solid else R.drawable.ic_heart)
-            ivStar.setImageResource(if (photo.isFavorite) R.drawable.ic_star else R.drawable.ic_star_border)
+            ivStar.setImageResource(if (photo.favorite) R.drawable.ic_star else R.drawable.ic_star_border)
         }
     }
 }
