@@ -22,7 +22,7 @@ class LocalStorage(
 
     override fun connect(): Single<List<Photo>> {
 
-        return Single.fromObservable { loadCompletion.hide() }
+        return loadCompletion.hide().first(emptyList())
 
 //        return loadCompletion
 //            .doOnNext{

@@ -22,9 +22,11 @@ class PhotoRepository(private val cashRepo: ILocalStorage, private val daoRepo: 
         cashRepo.connect()
     }
 
-    override fun loadGallery(): Observable<List<Photo>> =
-        photoWithMetaDataObservable()
-            .observeOn(AndroidSchedulers.mainThread())
+    override fun loadGallery(): Observable<List<Photo>> {
+        logIt("loadGallery")
+        return photoWithMetaDataObservable()
+            //.observeOn(AndroidSchedulers.mainThread())
+    }
 
     override fun loadFavourites(): Observable<List<Photo>> =
         photoWithMetaDataObservable()
@@ -45,33 +47,50 @@ class PhotoRepository(private val cashRepo: ILocalStorage, private val daoRepo: 
     override fun addToFavourites(id: Int) {
     }
 
-    private fun photoWithMetaDataObservable(): Observable<List<Photo>> =
-        photoSource
+    private fun photoWithMetaDataObservable(): Observable<List<Photo>> {
+
+        logIt("photoWithMetaDataObservable count = ${++count}")
+
+        return photoSource
             .flatMapObservable { list ->
+                logIt(list.toString())
                 Observable.fromIterable(list)
             }
             .flatMapMaybe { rawPhoto ->
 
                 daoRepo
                     .getPhoto(rawPhoto.id)
+                    .doOnError {
+                        logIt("1. daoRepo::getPhoto::doOnError ${it.message}")
+                    }
+                    .doOnSuccess {
+                        logIt("2. daoRepo::getPhoto::doOnSuccess photo id = ${it.id}")
+                    }
                     .defaultIfEmpty(rawPhoto)
                     .map { photoMetaData ->
+                        logIt("3. map")
                         photoMetaData.copy(bitmap = rawPhoto.bitmap)
                     }
-                    .doOnSuccess {photo ->
-                        logIt("photoWithMetaDataObservable::withMetaData ${photo.id}")
+                    .doOnSuccess { photo ->
+                        logIt("4. map::doOnSuccess ${photo.id}")
                         daoRepo.insertPhoto(photo)
                     }
             }
-            .doOnNext{
-                logIt("photoWithMetaDataObservable::doOnNext ${it.bitmap.toString()}")
+            .doOnNext {
+                logIt("5. flatMapMaybe::doOnNext ${it.bitmap.toString()}")
             }
-            .doOnComplete{
-                logIt("photoWithMetaDataObservable::doOnComplete")
+            .doOnComplete {
+                logIt("6. flatMapMaybe::doOnComplete")
             }
             .toList()
-            .doOnSuccess{
-                logIt("photoWithMetaDataObservable::toList success ${it.size}")
+            .doOnSuccess {
+                logIt("7. toList::doOnSuccess ${it.size}")
             }
             .toObservable()
+    }
+
+
+    companion object {
+        var count : Int = 0
+    }
 }
