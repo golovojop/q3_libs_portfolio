@@ -6,6 +6,7 @@ import dagger.Module
 import dagger.Provides
 import k.s.yarlykov.libsportfolio.data.db.AppRoomDatabase
 import k.s.yarlykov.libsportfolio.data.db.PhotoDao
+import k.s.yarlykov.libsportfolio.repository.room.RoomRepo
 import javax.inject.Singleton
 
 @Module
@@ -21,11 +22,8 @@ class OrmRoomModule(private val dbName: String) {
     fun providePhotoDao(db: AppRoomDatabase): PhotoDao =
         db.photoDao()
 
-
-//    @Singleton
-//    @Named("room_repo")
-//    @Provides
-//    fun provideRoomRepository(dbProvider: RoomDbProvider): IRepo =
-//        RoomRepo(dbProvider)
-
+    @Singleton
+    @Provides
+    fun provideRoomRepo(photoDao: PhotoDao) : RoomRepo =
+        RoomRepo(photoDao)
 }

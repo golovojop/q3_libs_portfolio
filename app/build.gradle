@@ -58,6 +58,7 @@ dependencies {
     kapt 'com.google.dagger:dagger-compiler:2.20'
 
     implementation "android.arch.persistence.room:runtime:1.1.1"
+    implementation "android.arch.persistence.room:rxjava2:1.0.0"
     kapt "android.arch.persistence.room:compiler:1.1.1"
 
     implementation 'com.google.firebase:firebase-analytics:17.2.1'

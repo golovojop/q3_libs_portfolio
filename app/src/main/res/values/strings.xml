@@ -1,6 +1,12 @@
 <resources>
     <string name="app_name">LibsPortfolio</string>
+    <string name="db_name">media.db</string>
+
+    <!-- FB, Instagram -->
     <string name="instagram_login">login</string>
+    <string name="auth_end_point">https://api.instagram.com/</string>
+    <string name="graph_end_point">https://graph.instagram.com/</string>
+    <string name="authenticate_test_user">https://www.instagram.com/oauth/authorize?app_id=937802139939708\u0026redirect_uri=https://www.instagram.com/\u0026scope=user_profile,user_media\u0026response_type=code</string>
 
     <string name="client_id">barabudev</string>
     <string name="app_id">937802139939708</string>
@@ -8,11 +14,7 @@
     <string name="app_secret">61a0e40678f3f39d64133afb848f0fb1</string>
     <string name="app_redirect_uri">https://www.instagram.com/</string>
 
-    <string name="auth_end_point">https://api.instagram.com/</string>
-    <string name="graph_end_point">https://graph.instagram.com/</string>
-    
-    <string name="authenticate_test_user">https://www.instagram.com/oauth/authorize?app_id=937802139939708\u0026redirect_uri=https://www.instagram.com/\u0026scope=user_profile,user_media\u0026response_type=code</string>
-    
+    <!-- UI -->
     <string name="tab_text_1">gallery</string>
     <string name="tab_text_2">favorites</string>
     <string name="tab_text_3">instagram</string>

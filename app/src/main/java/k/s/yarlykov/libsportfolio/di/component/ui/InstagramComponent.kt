@@ -1,4 +1,4 @@
-package k.s.yarlykov.libsportfolio.di.component
+package k.s.yarlykov.libsportfolio.di.component.ui
 
 import dagger.BindsInstance
 import dagger.Component

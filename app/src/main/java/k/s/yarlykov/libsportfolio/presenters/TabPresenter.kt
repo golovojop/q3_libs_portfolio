@@ -17,7 +17,8 @@ class TabPresenter(
 
     override fun onViewCreated(content: CONTENT) {
         this.content = content
-        disposable = getPhotoObservable().subscribe{photos ->
+        disposable = getPhotoObservable()
+            .subscribe{photos ->
             fragment.updateContent(photos)
         }
     }

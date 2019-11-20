@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.view.View
 import k.s.yarlykov.libsportfolio.CONTENT
 import k.s.yarlykov.libsportfolio.KEY_BUNDLE
-import k.s.yarlykov.libsportfolio.di.component.DaggerFavoritesFragmentComponent
+import k.s.yarlykov.libsportfolio.di.component.ui.DaggerFavoritesFragmentComponent
 import k.s.yarlykov.libsportfolio.presenters.TabPresenter
 import javax.inject.Inject
 import javax.inject.Named

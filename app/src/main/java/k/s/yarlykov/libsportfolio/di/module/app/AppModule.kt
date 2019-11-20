@@ -7,7 +7,7 @@ import dagger.Provides
 import k.s.yarlykov.libsportfolio.R
 import k.s.yarlykov.libsportfolio.repository.PhotoRepository
 import k.s.yarlykov.libsportfolio.repository.localstorage.LocalStorage
-import javax.inject.Inject
+import k.s.yarlykov.libsportfolio.repository.room.RoomRepo
 import javax.inject.Named
 import javax.inject.Singleton
 
@@ -25,12 +25,12 @@ class AppModule(private val application: Application) {
     @Provides
     @Singleton
     @Named("pics_array_id")
-    fun providePicsArrayId() : Int = R.array.month_pics
+    fun providePicsArrayId(): Int = R.array.month_pics
 
     @Provides
     @Singleton
     @Named("pic_default_id")
-    fun providePicDefaultId() : Int = R.drawable.bkg_05_may
+    fun providePicDefaultId(): Int = R.drawable.bkg_05_may
 
     @Provides
     @Singleton
@@ -42,7 +42,6 @@ class AppModule(private val application: Application) {
 
     @Provides
     @Singleton
-    fun providePhotoRepository(localStorage: LocalStorage): PhotoRepository {
-        return PhotoRepository(localStorage)
-    }
+    fun providePhotoRepository(localStorage: LocalStorage, roomRepo: RoomRepo): PhotoRepository =
+        PhotoRepository(localStorage, roomRepo)
 }

@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import k.s.yarlykov.libsportfolio.KEY_BUNDLE
 import k.s.yarlykov.libsportfolio.KEY_LAYOUT_ID
 import k.s.yarlykov.libsportfolio.R
-import k.s.yarlykov.libsportfolio.di.component.DaggerInstagramComponent
+import k.s.yarlykov.libsportfolio.di.component.ui.DaggerInstagramComponent
 import k.s.yarlykov.libsportfolio.di.module.instagram.InstagramModule
 import k.s.yarlykov.libsportfolio.logIt
 import k.s.yarlykov.libsportfolio.presenters.IInstagramFragment
