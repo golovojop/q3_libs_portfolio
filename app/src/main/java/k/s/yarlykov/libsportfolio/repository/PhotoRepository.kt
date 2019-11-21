@@ -40,12 +40,16 @@ class PhotoRepository(
             }
 
     override fun onUpdate(position: Int, photo: Photo) {
-        with(liveData.value.toMutableList()) {
-            if(position < size) {
-                this[position] = photo
-                liveData.onNext(this)
+
+        liveData.onNext(
+            liveData.value.map {p ->
+                if(p.id == photo.id) photo else p
             }
-        }
+        )
+    }
+
+    override fun onDisconnect() {
+        daoRepo.insertPhotos(liveData.value)
     }
 
     private fun assembleRawBitmapsWithMetadata(rawPhotos: Single<List<Photo>>): Single<List<Photo>> =

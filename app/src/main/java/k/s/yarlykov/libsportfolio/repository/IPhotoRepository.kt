@@ -7,4 +7,5 @@ interface IPhotoRepository {
     fun galleryStream() : Observable<List<Photo>>
     fun favoritesStream() : Observable<List<Photo>>
     fun onUpdate(position: Int, photo: Photo)
+    fun onDisconnect()
 }

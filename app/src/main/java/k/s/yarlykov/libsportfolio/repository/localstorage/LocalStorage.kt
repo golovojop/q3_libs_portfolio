@@ -115,7 +115,7 @@ class LocalStorage(
 
         private const val CAPACITY = 128
         private var memoryCache: HashMap<Int, Photo> = HashMap(CAPACITY)
-        private fun addLikes() = Random.nextInt(0, 5)
-        private fun setFavouriteStatus() = Random.nextBoolean()
+        private fun addLikes() = 0//Random.nextInt(0, 5)
+        private fun setFavouriteStatus() = false//Random.nextBoolean()
     }
 }
