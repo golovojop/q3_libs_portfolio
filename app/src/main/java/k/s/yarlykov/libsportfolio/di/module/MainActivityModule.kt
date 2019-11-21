@@ -58,7 +58,7 @@ class MainActivityModule {
 
     @FragmentScope
     @Provides
-    fun provideRecyclerViewItemLayuotId(): Int = R.layout.layout_rv_item
+    fun provideRecyclerViewItemLayoutId(): Int = R.layout.layout_rv_item
 
     @FragmentScope
     @Provides

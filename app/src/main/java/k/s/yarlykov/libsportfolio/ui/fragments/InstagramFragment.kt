@@ -37,6 +37,9 @@ class InstagramFragment : Fragment(), IInstagramFragment {
     @Inject
     lateinit var presenter: InstagramPresenter
 
+    @Inject
+    lateinit var rvAdapter : InstagramRvAdapter
+
     private val layerWebView = 0
     private val layerLoading = 1
     private val layerRecyclerView = 2
@@ -95,8 +98,7 @@ class InstagramFragment : Fragment(), IInstagramFragment {
             addItemDecoration(GridItemDecoration(2))
             itemAnimator = DefaultItemAnimator()
             layoutManager = GridLayoutManager(activity?.applicationContext, 2)
-            adapter =
-                InstagramRvAdapter(R.layout.layout_instagram_rv_item)
+            adapter = rvAdapter
         }
     }
 
