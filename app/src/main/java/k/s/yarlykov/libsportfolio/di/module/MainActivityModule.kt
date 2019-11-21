@@ -2,12 +2,14 @@ package k.s.yarlykov.libsportfolio.di.module
 
 import dagger.Module
 import dagger.Provides
+import k.s.yarlykov.libsportfolio.R
 import k.s.yarlykov.libsportfolio.di.scope.FragmentScope
 import k.s.yarlykov.libsportfolio.di.scope.MainActivityScope
 import k.s.yarlykov.libsportfolio.presenters.MainPresenter
 import k.s.yarlykov.libsportfolio.presenters.TabPresenter
 import k.s.yarlykov.libsportfolio.repository.PhotoRepository
 import k.s.yarlykov.libsportfolio.ui.MainActivity
+import k.s.yarlykov.libsportfolio.ui.adapters.PhotoRvAdapter
 import k.s.yarlykov.libsportfolio.ui.fragments.FavoritesTabFragment
 import k.s.yarlykov.libsportfolio.ui.fragments.GalleryTabFragment
 import javax.inject.Named
@@ -43,7 +45,8 @@ class MainActivityModule {
     @Named("gallery_presenter")
     fun provideGalleryFragmentPresenter(
         fragment: GalleryTabFragment,
-        photoRepository: PhotoRepository): TabPresenter {
+        photoRepository: PhotoRepository
+    ): TabPresenter {
         val key = fragment::class.java.simpleName
 
         if (!presenters.containsKey(key)) {
@@ -52,4 +55,14 @@ class MainActivityModule {
 
         return presenters[key] as TabPresenter
     }
+
+    @FragmentScope
+    @Provides
+    fun provideRecyclerViewItemLayuotId(): Int = R.layout.layout_rv_item
+
+    @FragmentScope
+    @Provides
+    fun providePhotoAdapter(layoutId: Int): PhotoRvAdapter =
+        PhotoRvAdapter(layoutId)
+
 }

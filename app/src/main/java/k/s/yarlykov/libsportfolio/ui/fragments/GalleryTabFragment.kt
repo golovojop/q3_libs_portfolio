@@ -7,6 +7,7 @@ import k.s.yarlykov.libsportfolio.CONTENT
 import k.s.yarlykov.libsportfolio.KEY_BUNDLE
 import k.s.yarlykov.libsportfolio.di.component.ui.DaggerGalleryFragmentComponent
 import k.s.yarlykov.libsportfolio.presenters.TabPresenter
+import k.s.yarlykov.libsportfolio.ui.adapters.PhotoRvAdapter
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -17,6 +18,9 @@ class GalleryTabFragment : TabFragment() {
     @Inject
     @field:Named("gallery_presenter")
     override lateinit var presenter: TabPresenter
+
+    @Inject
+    override lateinit var rvAdapter: PhotoRvAdapter
 
     companion object {
 

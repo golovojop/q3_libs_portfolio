@@ -27,6 +27,7 @@ abstract class TabFragment : Fragment(), ITabFragment {
 
     abstract val contentType: CONTENT
     abstract var presenter: TabPresenter
+    abstract var rvAdapter : PhotoRvAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedtate: Bundle?): View? {
         val layoutId = arguments?.getBundle(KEY_BUNDLE)!!.getInt(KEY_LAYOUT_ID)
@@ -54,7 +55,7 @@ abstract class TabFragment : Fragment(), ITabFragment {
             addItemDecoration(GridItemDecoration(2))
             itemAnimator = DefaultItemAnimator()
             layoutManager = GridLayoutManager(activity?.applicationContext, 2)
-            adapter = PhotoRvAdapter(R.layout.layout_rv_item)
+            adapter = rvAdapter
         }
     }
 }
