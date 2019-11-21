@@ -62,7 +62,17 @@ class MainActivityModule {
 
     @FragmentScope
     @Provides
-    fun providePhotoAdapter(layoutId: Int): PhotoRvAdapter =
-        PhotoRvAdapter(layoutId)
+    @Named("gallery_adapter")
+    fun provideGalleryAdapter(
+        layoutId: Int,
+        @Named("gallery_presenter") presenter : TabPresenter): PhotoRvAdapter =
+        PhotoRvAdapter(layoutId, presenter)
 
+    @FragmentScope
+    @Provides
+    @Named("favorites_adapter")
+    fun provideFavoriteAdapter(
+        layoutId: Int,
+        @Named("favorites_presenter") presenter : TabPresenter): PhotoRvAdapter =
+        PhotoRvAdapter(layoutId, presenter)
 }

@@ -20,6 +20,7 @@ class FavoritesTabFragment : TabFragment() {
     override lateinit var presenter: TabPresenter
 
     @Inject
+    @field:Named("favorites_adapter")
     override lateinit var rvAdapter: PhotoRvAdapter
 
     companion object {

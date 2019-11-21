@@ -8,8 +8,10 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import k.s.yarlykov.libsportfolio.R
 import k.s.yarlykov.libsportfolio.domain.room.Photo
+import k.s.yarlykov.libsportfolio.presenters.ITabPresenter
 
-class PhotoRvAdapter(private val itemResourceId: Int) : RecyclerView.Adapter<PhotoRvAdapter.ViewHolder>() {
+class PhotoRvAdapter(private val itemResourceId: Int, private val presenter: ITabPresenter) :
+    RecyclerView.Adapter<PhotoRvAdapter.ViewHolder>() {
 
     private val model = mutableListOf<Photo>()
 
@@ -36,16 +38,28 @@ class PhotoRvAdapter(private val itemResourceId: Int) : RecyclerView.Adapter<Pho
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val ivMain = itemView.findViewById<ImageView>(R.id.iv_rv_item)
-        val ivHeart = itemView.findViewById<ImageView>(R.id.iv_heart)
-        val ivStar = itemView.findViewById<ImageView>(R.id.iv_star)
-        val tvHeart = itemView.findViewById<TextView>(R.id.tv_hearts)
+        private val ivMain = itemView.findViewById<ImageView>(R.id.iv_rv_item)
+        private val ivLike = itemView.findViewById<ImageView>(R.id.iv_like)
+        private val ivFavorite = itemView.findViewById<ImageView>(R.id.iv_favorite)
+        private val tvLikes = itemView.findViewById<TextView>(R.id.tv_likes)
 
         fun bind(photo: Photo) {
             ivMain.setImageBitmap(photo.bitmap)
-            tvHeart.text = photo.likes.toString()
-            ivHeart.setImageResource(if (photo.likes > 0) R.drawable.ic_heart_solid else R.drawable.ic_heart)
-            ivStar.setImageResource(if (photo.favorite) R.drawable.ic_star else R.drawable.ic_star_border)
+            tvLikes.text = photo.likes.toString()
+
+            with(ivLike) {
+                setImageResource(if (photo.likes > 0) R.drawable.ic_like_solid else R.drawable.ic_like)
+                setOnClickListener {
+                    presenter.onClickLikeButton(adapterPosition)
+                }
+            }
+
+            with(ivFavorite) {
+                setImageResource(if (photo.favorite) R.drawable.ic_favorite_solid else R.drawable.ic_favorite)
+                setOnClickListener {
+                    presenter.onClickFavoriteButton(adapterPosition)
+                }
+            }
         }
     }
 }

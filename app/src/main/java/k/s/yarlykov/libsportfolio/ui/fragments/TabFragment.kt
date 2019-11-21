@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.GridLayoutManager
 import k.s.yarlykov.libsportfolio.CONTENT
 import k.s.yarlykov.libsportfolio.KEY_BUNDLE
 import k.s.yarlykov.libsportfolio.KEY_LAYOUT_ID
-import k.s.yarlykov.libsportfolio.R
 import k.s.yarlykov.libsportfolio.di.component.ui.MainActivityComponent
 import k.s.yarlykov.libsportfolio.di.module.MainActivityModule
 import k.s.yarlykov.libsportfolio.domain.room.Photo

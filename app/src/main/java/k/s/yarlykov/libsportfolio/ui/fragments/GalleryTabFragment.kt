@@ -20,6 +20,7 @@ class GalleryTabFragment : TabFragment() {
     override lateinit var presenter: TabPresenter
 
     @Inject
+    @field:Named("gallery_adapter")
     override lateinit var rvAdapter: PhotoRvAdapter
 
     companion object {

@@ -1,9 +1,9 @@
 package k.s.yarlykov.libsportfolio.repository
 
 import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.Single
+import io.reactivex.subjects.BehaviorSubject
 import k.s.yarlykov.libsportfolio.domain.room.Photo
-import k.s.yarlykov.libsportfolio.logIt
 import k.s.yarlykov.libsportfolio.repository.localstorage.ILocalStorage
 import k.s.yarlykov.libsportfolio.repository.room.IRoomRepo
 
@@ -13,46 +13,43 @@ import k.s.yarlykov.libsportfolio.repository.room.IRoomRepo
  */
 
 class PhotoRepository(
-    private val cashRepo: ILocalStorage,
+    cashRepo: ILocalStorage,
     private val daoRepo: IRoomRepo
 ) :
     IPhotoRepository {
 
+    private val liveData = BehaviorSubject.create<List<Photo>>()
+
     init {
         cashRepo.populateCache()
+
+        assembleRawBitmapsWithMetadata(cashRepo.connectToBitmapStream())
+            .subscribe { photos ->
+                liveData.onNext(photos)
+            }
     }
 
-    private val photoSource by lazy(LazyThreadSafetyMode.NONE) {
-        cashRepo.connect()
-    }
-
-    override fun loadGallery(): Observable<List<Photo>> {
-        return photoWithMetaDataObservable()
-            .observeOn(AndroidSchedulers.mainThread())
-    }
-
-    override fun loadFavourites(): Observable<List<Photo>> =
-        photoWithMetaDataObservable()
+    override fun galleryStream(): Observable<List<Photo>> = liveData.hide()
+    override fun favoritesStream(): Observable<List<Photo>> =
+        liveData
+            .hide()
             .map { list ->
                 list.filter { photo ->
                     photo.favorite
                 }
             }
-            .observeOn(AndroidSchedulers.mainThread())
 
-
-    override fun addPhoto(photo: Photo) {
+    override fun onUpdate(position: Int, photo: Photo) {
+        with(liveData.value.toMutableList()) {
+            if(position < size) {
+                this[position] = photo
+                liveData.onNext(this)
+            }
+        }
     }
 
-    override fun deletePhoto(id: Int) {
-    }
-
-    override fun addToFavourites(id: Int) {
-    }
-
-    private fun photoWithMetaDataObservable(): Observable<List<Photo>> {
-
-        return photoSource
+    private fun assembleRawBitmapsWithMetadata(rawPhotos: Single<List<Photo>>): Single<List<Photo>> =
+        rawPhotos
             .flatMapObservable { list ->
                 Observable.fromIterable(list)
             }
@@ -75,6 +72,4 @@ class PhotoRepository(
             }
             // Все фотки из flatMapMaybe собираем в List
             .toList()
-            .toObservable()
-    }
 }

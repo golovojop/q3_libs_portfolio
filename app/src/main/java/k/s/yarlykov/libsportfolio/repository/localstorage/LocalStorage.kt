@@ -18,8 +18,8 @@ class LocalStorage(
     private val defaultDrawableId: Int
 ) : ILocalStorage {
 
-    override fun connect(): Single<List<Photo>> =
-        loadCompletion.hide().first(emptyList())
+    override fun connectToBitmapStream(): Single<List<Photo>> =
+        loadCompletion.hide().elementAtOrError(0)
 
     override fun addPhoto(photo: Photo) {
         memoryCache[photo.id] = photo
