@@ -6,12 +6,10 @@ import android.graphics.BitmapFactory
 import io.reactivex.Observable
 import io.reactivex.Observer
 import io.reactivex.Single
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 import k.s.yarlykov.libsportfolio.domain.room.Photo
-import k.s.yarlykov.libsportfolio.logIt
 import kotlin.random.Random
 
 class LocalStorage(
@@ -20,16 +18,8 @@ class LocalStorage(
     private val defaultDrawableId: Int
 ) : ILocalStorage {
 
-    override fun connect(): Single<List<Photo>> {
-
-        return loadCompletion.hide().first(emptyList())
-
-//        return loadCompletion
-//            .doOnNext{
-//                logIt("LocalStorage::loadCompletion thread = ${Thread.currentThread().name}")
-//            }
-//            .hide()
-    }
+    override fun connect(): Single<List<Photo>> =
+        loadCompletion.hide().first(emptyList())
 
     override fun addPhoto(photo: Photo) {
         memoryCache[photo.id] = photo
@@ -99,6 +89,10 @@ class LocalStorage(
         }
     }
 
+    /**
+     * @onNext - записывает в кеш очередную Photo
+     * @onComplete - собирает все Photo в список и пушит в BehaviorSubject
+     */
     private val photoObserver = object : Observer<Photo> {
         override fun onSubscribe(d: Disposable) {
         }

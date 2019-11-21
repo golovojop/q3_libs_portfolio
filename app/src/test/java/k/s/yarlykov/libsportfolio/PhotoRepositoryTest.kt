@@ -25,11 +25,11 @@ class PhotoRepositoryTest {
     )
 
     val loadCompletion: BehaviorSubject<List<Photo>> = BehaviorSubject.create()
-//    val rawStream: Single<List<Photo>> = Single.fromObservable(loadCompletion.hide())
 
+    //    val rawStream: Single<List<Photo>> = Single.just(rawPhotos)
+    //    val rawStream: Single<List<Photo>> = Single.fromObservable(loadCompletion.hide())
     val rawStream: Single<List<Photo>> = loadCompletion.hide().first(emptyList())
 
-//    val rawStream: Single<List<Photo>> = Single.just(rawPhotos)
 
     val metaData = listOf(
         Photo(10, "", true, 10, null),
@@ -57,28 +57,22 @@ class PhotoRepositoryTest {
 
                 getMetaDataById(rawPhoto.id, metaRepo)
                     .doOnError {
-                        println("getMetaData::doOnError ${it.message}")
+                        println("getMetaDataById::doOnError - ${it.message}")
                     }
                     .doOnSuccess {
-                        println("getMetaData::doOnSuccess photo id = ${it.id}")
+                        println("getMetaDataById::doOnSuccess [Photo id = ${it.id}]")
                     }
                     .defaultIfEmpty(rawPhoto)
                     .map { photoMetaData ->
                         photoMetaData.copy(bitmap = rawPhoto.bitmap)
                     }
-                    .doOnSuccess { photo ->
-                        println("map::doOnSuccess withMetaData ${photo.id}")
-                    }
-            }
-            .doOnNext {
-                println("flatMapMaybe::doOnNext ${it.bitmap.toString()}")
             }
             .doOnComplete {
-                println("photoWithMetaDataObservable::doOnComplete")
+                println("flatMapMaybe::doOnComplete")
             }
             .toList()
             .doOnSuccess {
-                println("flatMapMaybe::toList::doOnSuccess list size = ${it.size}")
+                println("toList()::doOnSuccess [list size = ${it.size}]")
             }
             .toObservable()
     }
@@ -88,31 +82,26 @@ class PhotoRepositoryTest {
         loadCompletion.onNext(rawPhotos)
     }
 
-//    @Test
-//    fun shouldReturnObservable() {
-//        val obs = photoWithMetaDataObservable(metaData)
-//
-//        obs.subscribe {
-//
-//            it.forEach {
-//                assert(it.bitmap != null)
-//            }
-//
-////            assertEquals(rawPhotos.size, it.size)
-//        }
-//    }
-
     @Test
-    fun shouldReturnObservableToo() {
+    fun shouldReturnPhotoWithMetadataObservable() {
         val obs = photoWithMetaDataObservable(metaData)
 
         obs.subscribe {
+            assert(it.size == rawPhotos.size)
 
             it.forEach {
                 assert(it.bitmap != null)
             }
+        }
+    }
 
-//            assertEquals(rawPhotos.size, it.size)
+    @Test
+    fun shouldReturnEqualObservables() {
+        Observable.sequenceEqual(
+            photoWithMetaDataObservable(metaDataEmpty),
+            photoWithMetaDataObservable(metaDataEmpty)
+        ).subscribe { onNext->
+            assert(onNext)
         }
     }
 }

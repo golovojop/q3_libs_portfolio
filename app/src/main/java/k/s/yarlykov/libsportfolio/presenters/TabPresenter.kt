@@ -4,7 +4,6 @@ import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
 import k.s.yarlykov.libsportfolio.CONTENT
 import k.s.yarlykov.libsportfolio.domain.room.Photo
-import k.s.yarlykov.libsportfolio.logIt
 import k.s.yarlykov.libsportfolio.repository.IPhotoRepository
 
 class TabPresenter(
@@ -19,14 +18,8 @@ class TabPresenter(
     override fun onViewCreated(content: CONTENT) {
         this.content = content
 
-//        val bbb : io.reactivex.internal.operators.single.SingleToObservable
-//        val ccc : io.reactivex.internal.operators.observable.ObservableObserveOn
-
-        val d = getPhotoObservable()
-        logIt("${d::class.java.canonicalName}")
-
-            d.subscribe { photos ->
-                logIt("TabPresenter subscribed")
+        disposable = getPhotoObservable()
+            .subscribe { photos ->
                 fragment.updateContent(photos)
             }
     }

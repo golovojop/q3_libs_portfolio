@@ -8,10 +8,14 @@ import k.s.yarlykov.libsportfolio.repository.localstorage.ILocalStorage
 import k.s.yarlykov.libsportfolio.repository.room.IRoomRepo
 
 /**
- * Работает как интерактор между локальным кэшем (LocalStorage) и СУБД (Room)
+ * Работает как интерактор между локальным кэшем (LocalStorage),
+ * СУБД (Room) и презентерами
  */
 
-class PhotoRepository(private val cashRepo: ILocalStorage, private val daoRepo: IRoomRepo) :
+class PhotoRepository(
+    private val cashRepo: ILocalStorage,
+    private val daoRepo: IRoomRepo
+) :
     IPhotoRepository {
 
     init {
@@ -23,9 +27,8 @@ class PhotoRepository(private val cashRepo: ILocalStorage, private val daoRepo: 
     }
 
     override fun loadGallery(): Observable<List<Photo>> {
-        logIt("loadGallery")
         return photoWithMetaDataObservable()
-            //.observeOn(AndroidSchedulers.mainThread())
+            .observeOn(AndroidSchedulers.mainThread())
     }
 
     override fun loadFavourites(): Observable<List<Photo>> =
@@ -49,48 +52,29 @@ class PhotoRepository(private val cashRepo: ILocalStorage, private val daoRepo: 
 
     private fun photoWithMetaDataObservable(): Observable<List<Photo>> {
 
-        logIt("photoWithMetaDataObservable count = ${++count}")
-
         return photoSource
             .flatMapObservable { list ->
-                logIt(list.toString())
                 Observable.fromIterable(list)
             }
             .flatMapMaybe { rawPhoto ->
 
+                // Далее нужно заполнить rawPhoto метеданными (лайки, избранное) из СУБД
                 daoRepo
+                    // Запросить данные в базе
                     .getPhoto(rawPhoto.id)
-                    .doOnError {
-                        logIt("1. daoRepo::getPhoto::doOnError ${it.message}")
-                    }
-                    .doOnSuccess {
-                        logIt("2. daoRepo::getPhoto::doOnSuccess photo id = ${it.id}")
-                    }
+                    // Если данных нет, то берем пустые из rawPhoto
                     .defaultIfEmpty(rawPhoto)
+                    // Копируем в результирующую фотку битмапу из rawPhoto
                     .map { photoMetaData ->
-                        logIt("3. map")
                         photoMetaData.copy(bitmap = rawPhoto.bitmap)
                     }
+                    // Результирующую фотку помещаем в базу
                     .doOnSuccess { photo ->
-                        logIt("4. map::doOnSuccess ${photo.id}")
                         daoRepo.insertPhoto(photo)
                     }
             }
-            .doOnNext {
-                logIt("5. flatMapMaybe::doOnNext ${it.bitmap.toString()}")
-            }
-            .doOnComplete {
-                logIt("6. flatMapMaybe::doOnComplete")
-            }
+            // Все фотки из flatMapMaybe собираем в List
             .toList()
-            .doOnSuccess {
-                logIt("7. toList::doOnSuccess ${it.size}")
-            }
             .toObservable()
-    }
-
-
-    companion object {
-        var count : Int = 0
     }
 }
