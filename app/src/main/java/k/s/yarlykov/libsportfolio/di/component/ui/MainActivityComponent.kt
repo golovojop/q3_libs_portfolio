@@ -4,9 +4,8 @@ import android.content.Context
 import com.google.gson.Gson
 import dagger.BindsInstance
 import dagger.Component
-import k.s.yarlykov.libsportfolio.data.db.PhotoDao
 import k.s.yarlykov.libsportfolio.di.component.app.AppComponent
-import k.s.yarlykov.libsportfolio.di.module.MainActivityModule
+import k.s.yarlykov.libsportfolio.di.module.ui.MainActivityModule
 import k.s.yarlykov.libsportfolio.di.scope.MainActivityScope
 import k.s.yarlykov.libsportfolio.repository.PhotoRepository
 import k.s.yarlykov.libsportfolio.ui.MainActivity

@@ -7,30 +7,19 @@ import k.s.yarlykov.libsportfolio.di.component.app.DaggerAppComponent
 import k.s.yarlykov.libsportfolio.di.module.app.AppModule
 import k.s.yarlykov.libsportfolio.di.module.app.NetworkModule
 import k.s.yarlykov.libsportfolio.di.module.orm.OrmRoomModule
-import k.s.yarlykov.libsportfolio.repository.localstorage.LocalStorage
-import k.s.yarlykov.libsportfolio.repository.PhotoRepository
 
-class PortfolioApp : Application()/*, IRepositoryHelper */{
+class PortfolioApp : Application() {
 
-    private val appModule: AppModule by lazy(LazyThreadSafetyMode.NONE) {
-        AppModule(this)
-    }
+    lateinit var appComponent: AppComponent
 
-    private val netModule: NetworkModule by lazy(LazyThreadSafetyMode.NONE) {
-        NetworkModule()
-    }
+    override fun onCreate() {
+        super.onCreate()
 
-    private val roomModule: OrmRoomModule by lazy(LazyThreadSafetyMode.NONE) {
-        OrmRoomModule(getString(R.string.db_name))
-    }
-
-    val appComponent: AppComponent by lazy(LazyThreadSafetyMode.NONE) {
-
-        DaggerAppComponent
+        appComponent = DaggerAppComponent
             .builder()
-            .appModule(appModule)
-            .networkModule(netModule)
-            .ormRoomModule(roomModule)
+            .appModule(AppModule(this))
+            .networkModule(NetworkModule())
+            .ormRoomModule(OrmRoomModule(getString(R.string.db_name)))
             .build()
     }
 }

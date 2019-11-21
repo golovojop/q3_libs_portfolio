@@ -1,4 +1,4 @@
-package k.s.yarlykov.libsportfolio.di.module
+package k.s.yarlykov.libsportfolio.di.module.ui
 
 import dagger.Module
 import dagger.Provides

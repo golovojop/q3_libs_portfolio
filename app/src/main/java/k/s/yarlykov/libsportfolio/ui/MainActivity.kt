@@ -16,7 +16,7 @@ import k.s.yarlykov.libsportfolio.R
 import k.s.yarlykov.libsportfolio.application.PortfolioApp
 import k.s.yarlykov.libsportfolio.di.component.ui.DaggerMainActivityComponent
 import k.s.yarlykov.libsportfolio.di.component.ui.MainActivityComponent
-import k.s.yarlykov.libsportfolio.di.module.MainActivityModule
+import k.s.yarlykov.libsportfolio.di.module.ui.MainActivityModule
 import k.s.yarlykov.libsportfolio.presenters.IMainView
 import k.s.yarlykov.libsportfolio.presenters.MainPresenter
 import k.s.yarlykov.libsportfolio.ui.adapters.CustomFragmentPagerAdapter

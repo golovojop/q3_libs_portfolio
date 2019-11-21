@@ -2,7 +2,7 @@ package k.s.yarlykov.libsportfolio.di.component.ui
 
 import dagger.BindsInstance
 import dagger.Component
-import k.s.yarlykov.libsportfolio.di.module.MainActivityModule
+import k.s.yarlykov.libsportfolio.di.module.ui.MainActivityModule
 import k.s.yarlykov.libsportfolio.di.scope.FragmentScope
 import k.s.yarlykov.libsportfolio.ui.fragments.GalleryTabFragment
 
