@@ -1,18 +1,19 @@
 package k.s.yarlykov.libsportfolio.repository.instagram
 
-import io.reactivex.Observable
+import io.reactivex.Single
 import io.reactivex.subjects.BehaviorSubject
 import k.s.yarlykov.libsportfolio.data.network.InstagramAuthApi
 import k.s.yarlykov.libsportfolio.domain.instagram.InstagramToken
 import k.s.yarlykov.libsportfolio.logIt
 
-class InstagramAuthHelper (private val api : InstagramAuthApi) : IInstagramAuthHelper {
+class InstagramAuthHelper(private val api: InstagramAuthApi) : IInstagramAuthHelper {
 
     private val appCredentialsHolder = BehaviorSubject.create<Pair<String, String>>()
 
-    private val tokenObservable: Observable<InstagramToken> =
+    private val tokenObservable: Single<InstagramToken> =
         appCredentialsHolder
-            .switchMap { (code, secret) ->
+            .elementAtOrError(0)
+            .flatMap { (code, secret) ->
                 logIt("InstagramAuthHelper. code:secret ok")
                 api.tokenRequest(
                     appId = "937802139939708",
@@ -25,13 +26,12 @@ class InstagramAuthHelper (private val api : InstagramAuthApi) : IInstagramAuthH
                 if (!okHttpResponse.isSuccessful) {
                     throw Throwable("Cant' receive security token")
                 }
-
-                Observable.fromCallable { okHttpResponse.body()!! }
+                Single.fromCallable { okHttpResponse.body()!! }
             }
 
-    override fun requestToken(appCode: String, appSecret: String): Observable<InstagramToken> {
+
+    override fun requestToken(appCode: String, appSecret: String): Single<InstagramToken> {
         appCredentialsHolder.onNext(Pair(appCode, appSecret))
-        logIt("InstagramAuthHelper::appCredentialsHolder value = ${appCredentialsHolder.value}")
         return tokenObservable
     }
 }

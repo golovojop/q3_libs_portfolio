@@ -1,6 +1,7 @@
 package k.s.yarlykov.libsportfolio.presenters
 
 import io.reactivex.Observable
+import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.observers.DisposableObserver
@@ -29,10 +30,10 @@ class InstagramPresenter(
     private fun getMediaDataObservable(): Observable<String> {
 
         return getTokenObservable()
-            .doOnNext {
+            .doOnSuccess {
                 logIt("getMediaDataObservable:getTokenObservable")
             }
-            .flatMap { token ->
+            .flatMapObservable { token ->
                 graphHelper
                     .requestMediaEdge(token)
             }
@@ -57,12 +58,12 @@ class InstagramPresenter(
     }
 
     // Step 2.
-    private fun getTokenObservable(): Observable<String> {
+    private fun getTokenObservable(): Single<String> {
         logIt("getTokenObservable [enter]")
 
         return if (this::appToken.isInitialized) {
             logIt("getTokenObservable [has token]")
-            Observable.fromCallable {
+            Single.fromCallable {
                 appToken
             }
         } else {
@@ -72,7 +73,7 @@ class InstagramPresenter(
                 .map { token ->
                     token.accessToken
                 }
-                .doOnNext {t ->
+                .doOnSuccess { t ->
                     appToken = t
                 }
         }
@@ -90,12 +91,10 @@ class InstagramPresenter(
             getMediaDataObservable()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
+                .doOnNext { logIt("loaded next")}
+                .doOnComplete { logIt("loading complete")  }
                 .subscribe(
-                    { uri ->
-                        uriImages.add(uri)
-                        fragment.updateMediaContent(uriImages)
-                        fragment.onFrontRecyclerView()
-                    },
+                    { uri -> uriImages.add(uri) },
                     { t: Throwable -> logIt("MediaDataObservable::onError '${t.message}'") },
                     {
                         fragment.updateMediaContent(uriImages)
@@ -116,8 +115,8 @@ class InstagramPresenter(
 
         // Контент уже получен. Вывести на экран
         if (uriImages.isNotEmpty()) {
-            fragment.updateMediaContent(uriImages)
             fragment.onFrontRecyclerView()
+            fragment.updateMediaContent(uriImages)
             // Контента нет, но уже получен ApplicationCode
             // Значит можно получить токен, а затем контент
         } else if (this::appCode.isInitialized) {

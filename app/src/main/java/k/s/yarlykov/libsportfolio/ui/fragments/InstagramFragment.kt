@@ -102,6 +102,7 @@ class InstagramFragment : Fragment(), IInstagramFragment {
 
         rvPics.apply {
             setHasFixedSize(true)
+            setItemViewCacheSize(10)
             addItemDecoration(GridItemDecoration(2))
             itemAnimator = DefaultItemAnimator()
             layoutManager = GridLayoutManager(activity?.applicationContext, 2)
