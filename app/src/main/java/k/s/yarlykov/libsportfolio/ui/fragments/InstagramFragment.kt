@@ -37,9 +37,6 @@ class InstagramFragment : Fragment(), IInstagramFragment {
     @Inject
     lateinit var presenter: InstagramPresenter
 
-    @Inject
-    lateinit var rvAdapter : InstagramRvAdapter
-
     private val layerWebView = 0
     private val layerLoading = 1
     private val layerRecyclerView = 2
@@ -77,6 +74,16 @@ class InstagramFragment : Fragment(), IInstagramFragment {
         presenter.onViewCreated(getString(R.string.app_secret))
     }
 
+    override fun onResume() {
+        super.onResume()
+        presenter.onResume()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        presenter.onPause()
+    }
+
     override fun showAuthWebPage(authRequestUri : String) {
 
         logIt("InstagramFragment::showAuthWebPage()")
@@ -98,20 +105,20 @@ class InstagramFragment : Fragment(), IInstagramFragment {
             addItemDecoration(GridItemDecoration(2))
             itemAnimator = DefaultItemAnimator()
             layoutManager = GridLayoutManager(activity?.applicationContext, 2)
-            adapter = rvAdapter
+            adapter = InstagramRvAdapter(R.layout.layout_instagram_rv_item)
         }
     }
 
     override fun onFrontProgressBar() {
-        animator.displayedChild = layerLoading
+        animator?.displayedChild = layerLoading
     }
 
     override fun onFrontWebView() {
-        animator.displayedChild = layerWebView
+        animator?.displayedChild = layerWebView
     }
 
     override fun onFrontRecyclerView() {
-        animator.displayedChild = layerRecyclerView
+        animator?.displayedChild = layerRecyclerView
     }
 
     override fun updateMediaContent(uri: List<String>) {

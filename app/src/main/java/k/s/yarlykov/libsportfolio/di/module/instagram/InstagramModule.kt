@@ -5,17 +5,15 @@ import com.google.gson.Gson
 import dagger.Module
 import dagger.Provides
 import k.s.yarlykov.libsportfolio.R
-import k.s.yarlykov.libsportfolio.di.scope.InstagramScope
 import k.s.yarlykov.libsportfolio.data.network.InstagramAuthApi
 import k.s.yarlykov.libsportfolio.data.network.InstagramGraphApi
-import k.s.yarlykov.libsportfolio.di.scope.FragmentScope
+import k.s.yarlykov.libsportfolio.di.scope.InstagramScope
 import k.s.yarlykov.libsportfolio.presenters.InstagramPresenter
 import k.s.yarlykov.libsportfolio.repository.instagram.IInstagramAuthHelper
 import k.s.yarlykov.libsportfolio.repository.instagram.IInstagramGraphHelper
 import k.s.yarlykov.libsportfolio.repository.instagram.InstagramAuthHelper
 import k.s.yarlykov.libsportfolio.repository.instagram.InstagramGraphHelper
 import k.s.yarlykov.libsportfolio.ui.adapters.InstagramRvAdapter
-import k.s.yarlykov.libsportfolio.ui.adapters.PhotoRvAdapter
 import k.s.yarlykov.libsportfolio.ui.fragments.InstagramFragment
 import okhttp3.OkHttpClient
 import retrofit2.CallAdapter
@@ -95,13 +93,4 @@ class InstagramModule(private val authUri: String, private val graphUri: String)
     ): InstagramPresenter {
         return InstagramPresenter(fragment, authHelper, graphHelper, authRequestUri)
     }
-
-    @Provides
-    @InstagramScope
-    fun provideRecyclerViewItemLayoutId(): Int = R.layout.layout_instagram_rv_item
-
-    @Provides
-    @InstagramScope
-    fun provideRvAdapter(layoutId: Int): InstagramRvAdapter =
-        InstagramRvAdapter(layoutId)
 }

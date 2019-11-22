@@ -32,14 +32,12 @@ class MainActivity :
     IMainView,
     IDependencies<MainActivityComponent, MainActivityModule> {
 
-
     /**
      * LeakCanary test
      */
-    companion object {
-        lateinit var activity : AppCompatActivity
-    }
-
+//    companion object {
+//        lateinit var activity : AppCompatActivity
+//    }
 
     @Inject
     lateinit var presenter: MainPresenter
@@ -61,7 +59,10 @@ class MainActivity :
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        activity = this
+        /**
+         * LeakCanary test
+         */
+//        activity = this
 
         activityComponent.inject(this)
 
@@ -70,8 +71,8 @@ class MainActivity :
             /**
              * Crashlytics test
              */
-            throw NullPointerException("Crashlytics test")
-//            presenter.onFabTapped()
+//            throw NullPointerException("Crashlytics test")
+            presenter.onFabTapped()
         }
 
         initTabs()

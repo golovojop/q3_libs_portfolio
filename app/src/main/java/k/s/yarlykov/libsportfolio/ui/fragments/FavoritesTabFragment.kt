@@ -7,7 +7,6 @@ import k.s.yarlykov.libsportfolio.CONTENT
 import k.s.yarlykov.libsportfolio.KEY_BUNDLE
 import k.s.yarlykov.libsportfolio.di.component.ui.DaggerFavoritesFragmentComponent
 import k.s.yarlykov.libsportfolio.presenters.TabPresenter
-import k.s.yarlykov.libsportfolio.ui.adapters.PhotoRvAdapter
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -18,10 +17,6 @@ class FavoritesTabFragment : TabFragment() {
     @Inject
     @field:Named("favorites_presenter")
     override lateinit var presenter: TabPresenter
-
-    @Inject
-    @field:Named("favorites_adapter")
-    override lateinit var rvAdapter: PhotoRvAdapter
 
     companion object {
 
