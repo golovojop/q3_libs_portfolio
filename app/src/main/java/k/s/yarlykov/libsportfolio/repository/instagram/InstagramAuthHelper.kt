@@ -4,6 +4,7 @@ import io.reactivex.Observable
 import io.reactivex.subjects.BehaviorSubject
 import k.s.yarlykov.libsportfolio.data.network.InstagramAuthApi
 import k.s.yarlykov.libsportfolio.domain.instagram.InstagramToken
+import k.s.yarlykov.libsportfolio.logIt
 
 class InstagramAuthHelper (private val api : InstagramAuthApi) : IInstagramAuthHelper {
 
@@ -12,6 +13,7 @@ class InstagramAuthHelper (private val api : InstagramAuthApi) : IInstagramAuthH
     private val tokenObservable: Observable<InstagramToken> =
         appCredentialsHolder
             .switchMap { (code, secret) ->
+                logIt("InstagramAuthHelper. code:secret ok")
                 api.tokenRequest(
                     appId = "937802139939708",
                     appSecret = secret,
@@ -29,24 +31,7 @@ class InstagramAuthHelper (private val api : InstagramAuthApi) : IInstagramAuthH
 
     override fun requestToken(appCode: String, appSecret: String): Observable<InstagramToken> {
         appCredentialsHolder.onNext(Pair(appCode, appSecret))
+        logIt("InstagramAuthHelper::appCredentialsHolder value = ${appCredentialsHolder.value}")
         return tokenObservable
     }
-
-//    private fun initApiAdapter(): InstagramAuthApi {
-//        // Установить таймауты
-//        val okHttpClient = OkHttpClient().newBuilder()
-//            .connectTimeout(5, TimeUnit.SECONDS)
-//            .readTimeout(10, TimeUnit.SECONDS)
-//            .writeTimeout(10, TimeUnit.SECONDS)
-//            .build()
-//
-//        val adapter = Retrofit.Builder()
-//            .baseUrl(baseUrl)
-//            .client(okHttpClient)
-//            .addConverterFactory(GsonConverterFactory.create())
-//            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-//            .build()
-//
-//        return adapter.create(InstagramAuthApi::class.java)
-//    }
 }
