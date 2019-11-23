@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.SimpleItemAnimator
 import k.s.yarlykov.libsportfolio.KEY_BUNDLE
 import k.s.yarlykov.libsportfolio.KEY_LAYOUT_ID
 import k.s.yarlykov.libsportfolio.R
@@ -17,6 +18,7 @@ import k.s.yarlykov.libsportfolio.logIt
 import k.s.yarlykov.libsportfolio.presenters.IInstagramFragment
 import k.s.yarlykov.libsportfolio.presenters.InstagramPresenter
 import k.s.yarlykov.libsportfolio.ui.GridItemDecoration
+import k.s.yarlykov.libsportfolio.ui.IDependencies
 import k.s.yarlykov.libsportfolio.ui.InstagramWebClient
 import k.s.yarlykov.libsportfolio.ui.adapters.InstagramRvAdapter
 import kotlinx.android.synthetic.main.fragment_instagram.*
@@ -102,8 +104,12 @@ class InstagramFragment : Fragment(), IInstagramFragment {
 
         rvPics.apply {
             setHasFixedSize(true)
-            setItemViewCacheSize(10)
             addItemDecoration(GridItemDecoration(2))
+
+            /**
+             * Отключить анимацию, чтобы не было "миганий" при обновлении контента
+             * https://learnpainless.com/android/recyclerview/how-to-fix-blinking-issue-for-recyclerview-notify-changes
+             */
             itemAnimator = DefaultItemAnimator()
             layoutManager = GridLayoutManager(activity?.applicationContext, 2)
             adapter = InstagramRvAdapter(R.layout.layout_instagram_rv_item)
@@ -123,6 +129,8 @@ class InstagramFragment : Fragment(), IInstagramFragment {
     }
 
     override fun updateMediaContent(uri: List<String>) {
+        logIt("InstagramFragment::updateMediaContent")
         (rvPics.adapter as InstagramRvAdapter).updateModel(uri)
     }
 }
+

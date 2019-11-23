@@ -1,30 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ViewAnimator xmlns:android="http://schemas.android.com/apk/res/android"
-              android:id="@+id/animator"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:inAnimation="@android:anim/fade_in"
-              android:outAnimation="@android:anim/fade_out">
+        android:id="@+id/animator"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:inAnimation="@android:anim/fade_in"
+        android:outAnimation="@android:anim/fade_out">
+
     <WebView
             android:id="@+id/webView"
-            android:gravity="center"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-    </WebView>
+            android:layout_height="match_parent"
+            android:gravity="center"/>
 
     <ProgressBar
+            android:id="@+id/pbLoading"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/pbLoading"
             android:layout_gravity="center"
             android:indeterminateOnly="true"
-            android:theme="@style/CircularProgress"/>
+            android:theme="@style/CircularProgress" />
 
     <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvPics"
-            android:gravity="center"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-    </androidx.recyclerview.widget.RecyclerView>
+            android:layout_height="match_parent"
+            android:gravity="center"/>
 
 </ViewAnimator>

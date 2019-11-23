@@ -4,7 +4,6 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.observers.DisposableObserver
 import io.reactivex.schedulers.Schedulers
 import k.s.yarlykov.libsportfolio.logIt
 import k.s.yarlykov.libsportfolio.repository.instagram.IInstagramAuthHelper
@@ -34,8 +33,7 @@ class InstagramPresenter(
                 logIt("getMediaDataObservable:getTokenObservable")
             }
             .flatMapObservable { token ->
-                graphHelper
-                    .requestMediaEdge(token)
+                graphHelper.requestMediaEdge(token)
             }
             .doOnNext {
                 logIt("getMediaDataObservable:flatMap 1")
@@ -47,10 +45,9 @@ class InstagramPresenter(
             .doOnNext {
                 logIt("getMediaDataObservable:flatMap 2")
             }
-
             // Получить список медиа ресурсов в альбоме
             .flatMap { mediaAlbum ->
-                graphHelper.requestMediaData(mediaAlbum.id, this.appToken)
+                graphHelper.requestMediaData(mediaAlbum.id, appToken)
             }
             .doOnNext {
                 logIt("getMediaDataObservable:flatMap 3. exit")
@@ -83,6 +80,14 @@ class InstagramPresenter(
     override fun onAppCodeReceived(applicationCode: String) {
         logIt("onAppCodeReceived [$applicationCode]")
 
+        if (this::appCode.isInitialized &&
+            this::appToken.isInitialized &&
+            uriImages.isNotEmpty()
+        ) {
+            updateView()
+            return
+        }
+
         this.appCode = applicationCode
 
         fragment.onFrontProgressBar()
@@ -91,15 +96,12 @@ class InstagramPresenter(
             getMediaDataObservable()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnNext { logIt("loaded next")}
-                .doOnComplete { logIt("loading complete")  }
+                .doOnNext { logIt("loaded next") }
+                .doOnComplete { logIt("loading complete") }
                 .subscribe(
                     { uri -> uriImages.add(uri) },
                     { t: Throwable -> logIt("MediaDataObservable::onError '${t.message}'") },
-                    {
-                        fragment.updateMediaContent(uriImages)
-                        fragment.onFrontRecyclerView()
-                    })
+                    { updateView() })
         )
     }
 
@@ -115,12 +117,13 @@ class InstagramPresenter(
 
         // Контент уже получен. Вывести на экран
         if (uriImages.isNotEmpty()) {
-            fragment.onFrontRecyclerView()
-            fragment.updateMediaContent(uriImages)
-            // Контента нет, но уже получен ApplicationCode
+            updateView()
+
+            // Контента нет, но уже получен ApplicationCode.
             // Значит можно получить токен, а затем контент
         } else if (this::appCode.isInitialized) {
             onAppCodeReceived(appCode)
+
             // Ещё не получен ApplicationCode.
             // Запросить аутентификацию через GUI
         } else {
@@ -129,107 +132,17 @@ class InstagramPresenter(
         }
     }
 
-    /**
-     * ***************************************************************************
-     */
     override fun onViewCreated(appSecret: String) {
         this.appSecret = appSecret
     }
-
-//    override fun onResume() {
-//        logIt("$dbgPrefix onResume()")
-//
-//        /**
-//         * Перенос этого кода из onViewCreated спасает от крэша, потому что
-//         * TabLayout постоянно пересоздает фрагменты при кликах на заголовках табов.
-//         * И даже если кликать на зоголовки табов с другими фрагментами все равно
-//         * пересоздается и InstagramFragment.
-//         */
-//        if (this::appToken.isInitialized) {
-//            logIt("$dbgPrefix [has token], loading media data")
-//
-//            if (uriImages.size > 0) {
-//                fragment.updateMediaContent(uriImages)
-//                fragment.onFrontRecyclerView()
-//                return
-//            }
-//
-//            disposable.add(
-//                loadMediaData(appToken)
-//                    .subscribeOn(Schedulers.io())
-//                    .observeOn(AndroidSchedulers.mainThread())
-//                    .subscribe(
-//                        { uri ->
-//                            uriImages.add(uri)
-//                            fragment.updateMediaContent(uriImages)
-//                            fragment.onFrontRecyclerView()
-//                        },
-//                        { t: Throwable -> logIt("mediaDataUriObserver: onError '${t.message}'") },
-//                        {
-//                            fragment.updateMediaContent(uriImages)
-//                            fragment.onFrontRecyclerView()
-//                        })
-//            )
-//        } else {
-//            logIt("$dbgPrefix [no token], start auth")
-//            fragment.onFrontWebView()
-//            fragment.showAuthWebPage(authRequestUri)
-//        }
-//    }
 
     override fun onPause() {
         logIt("$dbgPrefix onPause()")
         disposable.clear()
     }
 
-    // Callback из webview с аутентификацией
-//    override fun onAppCodeReceived(applicationCode: String) {
-//
-//        fragment.onFrontProgressBar()
-//
-//        authHelper
-//            // Получить токен
-//            .requestToken(applicationCode, appSecret)
-//            .subscribeOn(Schedulers.io())
-//            // Сохранить токен
-//            .doOnNext { token ->
-//                appToken = token.accessToken
-//            }
-//            // Загрузить медиа файлы
-//            .flatMap { token ->
-//                loadMediaData(token.accessToken)
-//            }
-//            .observeOn(AndroidSchedulers.mainThread())
-//            .subscribe(mediaDataUriObserver)
-//    }
-
-//    private fun loadMediaData(token: String): Observable<String> {
-//        return graphHelper
-//            .requestMediaEdge(token)
-//            .flatMap { mediaNode ->
-//                Observable.fromIterable(mediaNode.albums)
-//            }
-//            // Получить список медиа ресурсов в альбоме
-//            .flatMap { mediaAlbum ->
-//                graphHelper.requestMediaData(mediaAlbum.id, appToken)
-//            }
-//    }
-//
-//    private val mediaDataUriObserver = object : DisposableObserver<String>() {
-//
-//        override fun onNext(uri: String) {
-//            uriImages.add(uri)
-//            fragment.updateMediaContent(uriImages)
-//            fragment.onFrontRecyclerView()
-//        }
-//
-//        override fun onComplete() {
-//            fragment.updateMediaContent(uriImages)
-//            fragment.onFrontRecyclerView()
-//        }
-//
-//        override fun onError(e: Throwable) {
-//            logIt("mediaDataUriObserver: onError '${e.message}'")
-//        }
-//    }
+    private fun updateView() {
+        fragment.updateMediaContent(uriImages)
+        fragment.onFrontRecyclerView()
+    }
 }

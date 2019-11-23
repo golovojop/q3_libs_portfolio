@@ -9,6 +9,8 @@ package k.s.yarlykov.libsportfolio.ui
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.viewpager.widget.ViewPager
+import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 import k.s.yarlykov.libsportfolio.CONTENT
 import k.s.yarlykov.libsportfolio.KEY_LAYOUT_ID
@@ -17,6 +19,7 @@ import k.s.yarlykov.libsportfolio.application.PortfolioApp
 import k.s.yarlykov.libsportfolio.di.component.ui.DaggerMainActivityComponent
 import k.s.yarlykov.libsportfolio.di.component.ui.MainActivityComponent
 import k.s.yarlykov.libsportfolio.di.module.ui.MainActivityModule
+import k.s.yarlykov.libsportfolio.logIt
 import k.s.yarlykov.libsportfolio.presenters.IMainView
 import k.s.yarlykov.libsportfolio.presenters.MainPresenter
 import k.s.yarlykov.libsportfolio.ui.adapters.CustomFragmentPagerAdapter
