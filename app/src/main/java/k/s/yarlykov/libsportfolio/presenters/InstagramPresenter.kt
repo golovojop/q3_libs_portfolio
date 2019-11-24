@@ -23,48 +23,30 @@ class InstagramPresenter(
     private val uriImages = mutableListOf<String>()
     private val disposable = CompositeDisposable()
 
-    private val dbgPrefix = "${this::class.java.simpleName}::${this.hashCode().toString(16)}"
-
     // Step 3.
     private fun getMediaDataObservable(): Observable<String> {
 
         return getTokenObservable()
-            .doOnSuccess {
-                logIt("getMediaDataObservable:getTokenObservable")
-            }
             .flatMapObservable { token ->
                 graphHelper.requestMediaEdge(token)
             }
-            .doOnNext {
-                logIt("getMediaDataObservable:flatMap 1")
-            }
-
             .flatMap { mediaNode ->
                 Observable.fromIterable(mediaNode.albums)
-            }
-            .doOnNext {
-                logIt("getMediaDataObservable:flatMap 2")
             }
             // Получить список медиа ресурсов в альбоме
             .flatMap { mediaAlbum ->
                 graphHelper.requestMediaData(mediaAlbum.id, appToken)
             }
-            .doOnNext {
-                logIt("getMediaDataObservable:flatMap 3. exit")
-            }
     }
 
     // Step 2.
     private fun getTokenObservable(): Single<String> {
-        logIt("getTokenObservable [enter]")
 
         return if (this::appToken.isInitialized) {
-            logIt("getTokenObservable [has token]")
             Single.fromCallable {
                 appToken
             }
         } else {
-            logIt("getTokenObservable [no token]")
             authHelper
                 .requestToken(appCode, appSecret)
                 .map { token ->
@@ -78,7 +60,6 @@ class InstagramPresenter(
 
     // Step 1.
     override fun onAppCodeReceived(applicationCode: String) {
-        logIt("onAppCodeReceived [$applicationCode]")
 
         if (this::appCode.isInitialized &&
             this::appToken.isInitialized &&
@@ -96,8 +77,6 @@ class InstagramPresenter(
             getMediaDataObservable()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnNext { logIt("loaded next") }
-                .doOnComplete { logIt("loading complete") }
                 .subscribe(
                     { uri -> uriImages.add(uri) },
                     { t: Throwable -> logIt("MediaDataObservable::onError '${t.message}'") },
@@ -105,17 +84,29 @@ class InstagramPresenter(
         )
     }
 
-    override fun onResume() {
-        logIt("$dbgPrefix onResume()")
+    override fun onViewCreated(appSecret: String) {
+        this.appSecret = appSecret
+        retrieveAndRenderContent()
+    }
 
-        /**
-         * Перенос этого кода из onViewCreated спасает от крэша, потому что
-         * TabLayout постоянно пересоздает фрагменты при кликах на заголовках табов.
-         * И даже если кликать на зоголовки табов с другими фрагментами все равно
-         * пересоздается и InstagramFragment.
-         */
+    override fun onPause() {
+        disposable.clear()
+    }
 
-        // Контент уже получен. Вывести на экран
+    /**
+     * Вызов этого кода из onViewCreated избавил от мигания экрана при переключении
+     * на данный фрагмент свайпом. Мигание появлялось, если свайпом сделать следующий переход:
+     * instagram -> favorites -> instagram. Если тоже самое делать тачем на заголовках таба,
+     * то мигания не было. Также мигание отсутствовало при свайпе gallery -> favorites ->
+     * instagram.
+     */
+    private fun retrieveAndRenderContent() {
+
+        // Контент уже получен. Вывести на экран.
+        // Проверка нужна потому, что TabLayout старается оптимизировать отрисовку контента
+        // и вызывает onViewCreated у соседей фрагмента, который стал видимым. Чтобы при каждом
+        // клике на favorites не начинать перезагрузку картинок из инстаграмма проверяем,
+        // что контент уже имееется и показываем его без повторной загрузки.
         if (uriImages.isNotEmpty()) {
             updateView()
 
@@ -130,15 +121,6 @@ class InstagramPresenter(
             fragment.onFrontWebView()
             fragment.showAuthWebPage(authRequestUri)
         }
-    }
-
-    override fun onViewCreated(appSecret: String) {
-        this.appSecret = appSecret
-    }
-
-    override fun onPause() {
-        logIt("$dbgPrefix onPause()")
-        disposable.clear()
     }
 
     private fun updateView() {

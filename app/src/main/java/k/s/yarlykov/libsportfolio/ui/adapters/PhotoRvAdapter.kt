@@ -48,14 +48,26 @@ class PhotoRvAdapter(private val itemResourceId: Int, private val presenter: ITa
             tvLikes.text = photo.likes.toString()
 
             with(ivLike) {
-                setImageResource(if (photo.likes > 0) R.drawable.ic_like_solid else R.drawable.ic_like)
+                setImageResource(
+                    if (photo.likes > 0)
+                        R.drawable.ic_like_solid
+                    else
+                        R.drawable.ic_like
+                )
+
                 setOnClickListener {
                     presenter.onClickLikeButton(adapterPosition)
                 }
             }
 
             with(ivFavorite) {
-                setImageResource(if (photo.favorite) R.drawable.ic_favorite_solid else R.drawable.ic_favorite)
+                setImageResource(
+                    if (photo.favorite)
+                        R.drawable.ic_favorite_solid
+                    else
+                        R.drawable.ic_favorite
+                )
+
                 setOnClickListener {
                     presenter.onClickFavoriteButton(adapterPosition)
                 }
