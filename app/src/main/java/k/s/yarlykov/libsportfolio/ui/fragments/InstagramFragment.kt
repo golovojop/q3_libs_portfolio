@@ -17,7 +17,7 @@ import k.s.yarlykov.libsportfolio.ui.InstagramWebClient
 import k.s.yarlykov.libsportfolio.presenters.IInstagramFragment
 import k.s.yarlykov.libsportfolio.presenters.InstagramPresenter
 import k.s.yarlykov.libsportfolio.ui.GridItemDecoration
-import k.s.yarlykov.libsportfolio.ui.InstagramRvAdapter
+import k.s.yarlykov.libsportfolio.ui.adapters.InstagramRvAdapter
 import kotlinx.android.synthetic.main.fragment_instagram.*
 
 class InstagramFragment : MvpAppCompatFragment(), IInstagramFragment {
@@ -60,9 +60,9 @@ class InstagramFragment : MvpAppCompatFragment(), IInstagramFragment {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         initRecycleView()
         presenter.onViewCreated(getString(R.string.app_secret))
+
     }
 
     override fun onDestroy() {
@@ -91,7 +91,8 @@ class InstagramFragment : MvpAppCompatFragment(), IInstagramFragment {
             addItemDecoration(GridItemDecoration(2))
             itemAnimator = DefaultItemAnimator()
             layoutManager = GridLayoutManager(activity?.applicationContext, 2)
-            adapter = InstagramRvAdapter(R.layout.layout_instagram_rv_item)
+            adapter =
+                InstagramRvAdapter(R.layout.layout_instagram_rv_item)
         }
     }
 

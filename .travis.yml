@@ -1,0 +1,36 @@
+language: android
+
+jdk: oraclejdk8
+
+android:
+  components:
+  - platform-tools
+  - tools
+  - android-28
+  - build-tools-28.0.3
+  - extra-android-m2repository
+
+branches:
+  only:
+  - master
+
+before_install:
+- yes | sdkmanager "platforms;android-28"
+
+install:
+  - chmod +x ./gradlew
+  - chmod +x ./autobuild/push-apk.sh
+
+script: ./gradlew clean assembleDebug
+
+after_success:
+  - ./autobuild/push-apk.sh
+
+notifications:
+  email:
+    on_success: change
+    on_failure: always
+
+env:
+  global:
+    secure: ZK74df8wCo7U3D/IgseESEpjOVCPUu1NNM+nYT6NcXo9dQQuhdDzL5tbOOVXFBieReaAbVo3XhEFs56hiV2N/qhnU7U6IvKZYb9pU4rBxabhbajU+QIeMi8WgusaudwPV+jAL4v5QlBS/se1bdkgI0Mj53gf0IfpUFL/AcXkCzHEbfdAYP4xUJc6IFqnxpcPd3MydnNTbOQPvCUAF3sdGmyu6AYOYGtIUZq82/IOYHRoQ6L1ra1SpxeWO+tnPWs3qEQdGpwQ47OKK+VJoYiWp7+AbYEBxirC0ycjokgiCPwcqLwunqdfv1Jm6NMmTZLfodAyT3yVVIv4GayixKk0Dkf3oarawHuygxQduD0ysh8Qn1a5Ioy0WDvdNDDM6YPm65U8YOEcQ3IidZ3V9h5rsspKUVEOsrthTwj63xOpzI0noTXhdLbJ84LKARF6OXHTN+etd6LUfEX1UOzoh6UwDwhCST0qah1TY0dez6eB8G2QrvPKYs2i1xFxcJ1Kq624ZrE5uIRPr2ZAmJSCk90bM5noA1S1AUAB65RJvR1wHmbac8qE64rLNBMc5TdTwOufksqZbYb+culZ/7+GMN+Urr+ju2jTWYQ33rxwE4S+dmC3dSJhXR+m6Hfov+i0QkUAnESqIJ6MI93BHW5T8AyjPQAa4mmpS+ciZRlhPuHvKNI=

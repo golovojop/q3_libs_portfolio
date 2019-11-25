@@ -6,7 +6,9 @@ import k.s.yarlykov.libsportfolio.repository.localstorage.ILocalStorage
 
 class PhotoRepository(storage : ILocalStorage) : IPhotoRepository {
 
-    private val photoObservable = storage.connect()
+    private val photoObservable by lazy (LazyThreadSafetyMode.NONE) {
+        storage.connect()
+    }
 
     override fun loadGallery(): Observable<List<Photo>> {
         return photoObservable

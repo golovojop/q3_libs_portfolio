@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "410434526116",
+    "firebase_url": "https://androidlibraries-7cfbc.firebaseio.com",
+    "project_id": "androidlibraries-7cfbc",
+    "storage_bucket": "androidlibraries-7cfbc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:410434526116:android:bba2e224184ddb7a117f31",
+        "android_client_info": {
+          "package_name": "k.s.yarlykov.libsportfolio"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "410434526116-udqlg2q68t23pisrvsdrqq2nshmmskbr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBUxc_i-Guq8hinRzzXJKW1Bm2nhnMq0wU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "410434526116-udqlg2q68t23pisrvsdrqq2nshmmskbr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

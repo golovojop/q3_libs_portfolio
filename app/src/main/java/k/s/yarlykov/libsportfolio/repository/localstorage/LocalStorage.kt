@@ -83,10 +83,7 @@ class LocalStorage(private val context: Context, private val arrayId: Int, priva
     }
 
     private val photoObserver = object : Observer<Photo> {
-        lateinit var disposable: Disposable
-
         override fun onSubscribe(d: Disposable) {
-            disposable = d
         }
 
         override fun onNext(photo: Photo) {
@@ -94,7 +91,6 @@ class LocalStorage(private val context: Context, private val arrayId: Int, priva
         }
 
         override fun onComplete() {
-            if (!disposable.isDisposed) disposable.dispose()
             loadCompletion.onNext(memoryCache.values.toList())
         }
 
