@@ -23,67 +23,6 @@ class InstagramPresenter(
     private val uriImages = mutableListOf<String>()
     private val disposable = CompositeDisposable()
 
-    // Step 3.
-    private fun getMediaDataObservable(): Observable<String> {
-
-        return getTokenObservable()
-            .flatMapObservable { token ->
-                graphHelper.requestMediaEdge(token)
-            }
-            .flatMap { mediaNode ->
-                Observable.fromIterable(mediaNode.albums)
-            }
-            // Получить список медиа ресурсов в альбоме
-            .flatMap { mediaAlbum ->
-                graphHelper.requestMediaData(mediaAlbum.id, appToken)
-            }
-    }
-
-    // Step 2.
-    private fun getTokenObservable(): Single<String> {
-
-        return if (this::appToken.isInitialized) {
-            Single.fromCallable {
-                appToken
-            }
-        } else {
-            authHelper
-                .requestToken(appCode, appSecret)
-                .map { token ->
-                    token.accessToken
-                }
-                .doOnSuccess { t ->
-                    appToken = t
-                }
-        }
-    }
-
-    // Step 1.
-    override fun onAppCodeReceived(applicationCode: String) {
-
-        if (this::appCode.isInitialized &&
-            this::appToken.isInitialized &&
-            uriImages.isNotEmpty()
-        ) {
-            updateView()
-            return
-        }
-
-        this.appCode = applicationCode
-
-        fragment.onFrontProgressBar()
-
-        disposable.add(
-            getMediaDataObservable()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                    { uri -> uriImages.add(uri) },
-                    { t: Throwable -> logIt("MediaDataObservable::onError '${t.message}'") },
-                    { updateView() })
-        )
-    }
-
     override fun onViewCreated(appSecret: String) {
         this.appSecret = appSecret
         retrieveAndRenderContent()
@@ -121,6 +60,69 @@ class InstagramPresenter(
             fragment.onFrontWebView()
             fragment.showAuthWebPage(authRequestUri)
         }
+    }
+
+    // Step 1.
+    // Точка входа.
+    // ApplicationCode либо прилетает из WebView, либо уже загружен в поле класса.
+    override fun onAppCodeReceived(applicationCode: String) {
+
+        if (this::appCode.isInitialized &&
+            this::appToken.isInitialized &&
+            uriImages.isNotEmpty()
+        ) {
+            updateView()
+            return
+        }
+
+        this.appCode = applicationCode
+
+        fragment.onFrontProgressBar()
+
+        disposable.add(
+            getMediaDataObservable()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                    { uri -> uriImages.add(uri) },
+                    { t: Throwable -> logIt("MediaDataObservable::onError '${t.message}'") },
+                    { updateView() })
+        )
+    }
+
+    // Step 2.
+    private fun getTokenObservable(): Single<String> {
+
+        return if (this::appToken.isInitialized) {
+            Single.fromCallable {
+                appToken
+            }
+        } else {
+            authHelper
+                .requestToken(appCode, appSecret)
+                .map { token ->
+                    token.accessToken
+                }
+                .doOnSuccess { t ->
+                    appToken = t
+                }
+        }
+    }
+
+    // Step 3.
+    private fun getMediaDataObservable(): Observable<String> {
+
+        return getTokenObservable()
+            .flatMapObservable { token ->
+                graphHelper.requestMediaEdge(token)
+            }
+            .flatMap { mediaNode ->
+                Observable.fromIterable(mediaNode.albums)
+            }
+            // Получить список медиа ресурсов в альбоме
+            .flatMap { mediaAlbum ->
+                graphHelper.requestMediaData(mediaAlbum.id, appToken)
+            }
     }
 
     private fun updateView() {

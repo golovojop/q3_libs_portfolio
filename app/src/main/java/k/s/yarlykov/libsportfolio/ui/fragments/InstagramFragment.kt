@@ -113,7 +113,9 @@ class InstagramFragment : Fragment(), IInstagramFragment {
     }
 
     override fun updateMediaContent(uri: List<String>) {
-        (rvPics.adapter as InstagramRvAdapter).updateModel(uri)
+        rvPics?.let {
+            (rvPics.adapter as InstagramRvAdapter).updateModel(uri)
+        }
     }
 }
 

@@ -10,7 +10,6 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 import k.s.yarlykov.libsportfolio.domain.room.Photo
-import kotlin.random.Random
 
 class LocalStorage(
     private val context: Context,
@@ -115,7 +114,7 @@ class LocalStorage(
 
         private const val CAPACITY = 128
         private var memoryCache: HashMap<Int, Photo> = HashMap(CAPACITY)
-        private fun addLikes() = 0//Random.nextInt(0, 5)
-        private fun setFavouriteStatus() = false//Random.nextBoolean()
+        private fun addLikes() = 0
+        private fun setFavouriteStatus() = false
     }
 }

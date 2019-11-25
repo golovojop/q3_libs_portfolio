@@ -2,16 +2,12 @@ package k.s.yarlykov.libsportfolio.di.module.ui
 
 import dagger.Module
 import dagger.Provides
-import k.s.yarlykov.libsportfolio.R
 import k.s.yarlykov.libsportfolio.di.scope.FragmentScope
 import k.s.yarlykov.libsportfolio.di.scope.MainActivityScope
-import k.s.yarlykov.libsportfolio.presenters.IPresenter
-import k.s.yarlykov.libsportfolio.presenters.InstagramPresenter
 import k.s.yarlykov.libsportfolio.presenters.MainPresenter
 import k.s.yarlykov.libsportfolio.presenters.TabPresenter
 import k.s.yarlykov.libsportfolio.repository.PhotoRepository
 import k.s.yarlykov.libsportfolio.ui.MainActivity
-import k.s.yarlykov.libsportfolio.ui.adapters.PhotoRvAdapter
 import k.s.yarlykov.libsportfolio.ui.fragments.FavoritesTabFragment
 import k.s.yarlykov.libsportfolio.ui.fragments.GalleryTabFragment
 import javax.inject.Named

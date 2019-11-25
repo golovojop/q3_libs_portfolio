@@ -2,6 +2,7 @@ package k.s.yarlykov.libsportfolio.repository
 
 import io.reactivex.Observable
 import io.reactivex.Single
+import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 import k.s.yarlykov.libsportfolio.domain.room.Photo
 import k.s.yarlykov.libsportfolio.repository.localstorage.ILocalStorage
@@ -23,9 +24,22 @@ class PhotoRepository(
     init {
         cashRepo.populateCache()
 
+        // Собрать Bitmap'ы картинок и метаданные в объекты Photo.
+        // Результирующий массив эмиттировать через liveData.
         assembleRawBitmapsWithMetadata(cashRepo.connectToBitmapStream())
             .subscribe { photos ->
                 liveData.onNext(photos)
+            }
+
+        // Подписаться на изменения состояний Likes/Favorites, чтобы сохранять их в БД.
+        // Для работы с БД в отдельном потоке создать независимый Observable в flatMap.
+        liveData
+            .flatMap { photos ->
+                Observable.just(photos)
+                    .subscribeOn(Schedulers.io())
+            }
+            .subscribe { photos ->
+                daoRepo.insertPhotos(photos)
             }
     }
 
@@ -41,15 +55,12 @@ class PhotoRepository(
 
     override fun onUpdate(position: Int, photo: Photo) {
 
+        // Заменить элемент в списке
         liveData.onNext(
-            liveData.value.map {p ->
-                if(p.id == photo.id) photo else p
+            liveData.value.map { p ->
+                if (p.id == photo.id) photo else p
             }
         )
-    }
-
-    override fun onDisconnect() {
-        daoRepo.insertPhotos(liveData.value)
     }
 
     private fun assembleRawBitmapsWithMetadata(rawPhotos: Single<List<Photo>>): Single<List<Photo>> =

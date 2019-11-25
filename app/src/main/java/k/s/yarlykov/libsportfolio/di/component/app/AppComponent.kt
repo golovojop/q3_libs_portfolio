@@ -8,7 +8,6 @@ import k.s.yarlykov.libsportfolio.di.module.app.AppModule
 import k.s.yarlykov.libsportfolio.di.module.app.NetworkModule
 import k.s.yarlykov.libsportfolio.di.module.orm.OrmRoomModule
 import k.s.yarlykov.libsportfolio.repository.PhotoRepository
-import k.s.yarlykov.libsportfolio.repository.room.RoomRepo
 import okhttp3.OkHttpClient
 import retrofit2.CallAdapter
 import javax.inject.Singleton

@@ -13,7 +13,6 @@ import k.s.yarlykov.libsportfolio.repository.instagram.IInstagramAuthHelper
 import k.s.yarlykov.libsportfolio.repository.instagram.IInstagramGraphHelper
 import k.s.yarlykov.libsportfolio.repository.instagram.InstagramAuthHelper
 import k.s.yarlykov.libsportfolio.repository.instagram.InstagramGraphHelper
-import k.s.yarlykov.libsportfolio.ui.adapters.InstagramRvAdapter
 import k.s.yarlykov.libsportfolio.ui.fragments.InstagramFragment
 import okhttp3.OkHttpClient
 import retrofit2.CallAdapter
