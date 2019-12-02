@@ -1,4 +1,4 @@
-package k.s.yarlykov.libsportfolio.di.module
+package k.s.yarlykov.libsportfolio.di.module.ui
 
 import dagger.Module
 import dagger.Provides
@@ -31,11 +31,11 @@ class MainActivityModule {
 
         val key = fragment::class.java.simpleName
 
-        return if (presenters.containsKey(key)) {
-            presenters[key] as TabPresenter
-        } else {
-            TabPresenter(fragment, photoRepository)
+        if (!presenters.containsKey(key)) {
+            presenters[key] = TabPresenter(fragment, photoRepository)
         }
+
+        return presenters[key] as TabPresenter
     }
 
     @FragmentScope
@@ -43,13 +43,14 @@ class MainActivityModule {
     @Named("gallery_presenter")
     fun provideGalleryFragmentPresenter(
         fragment: GalleryTabFragment,
-        photoRepository: PhotoRepository): TabPresenter {
+        photoRepository: PhotoRepository
+    ): TabPresenter {
         val key = fragment::class.java.simpleName
 
-        return if (presenters.containsKey(key)) {
-            presenters[key] as TabPresenter
-        } else {
-            TabPresenter(fragment, photoRepository)
+        if (!presenters.containsKey(key)) {
+            presenters[key] = TabPresenter(fragment, photoRepository)
         }
+
+        return presenters[key] as TabPresenter
     }
 }

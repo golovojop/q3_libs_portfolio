@@ -1,8 +1,8 @@
-package k.s.yarlykov.libsportfolio.instagram.network
+package k.s.yarlykov.libsportfolio.data.network
 
 import io.reactivex.Observable
-import k.s.yarlykov.libsportfolio.model.instagram.MediaFileList
-import k.s.yarlykov.libsportfolio.model.instagram.MediaNode
+import k.s.yarlykov.libsportfolio.domain.instagram.MediaFileList
+import k.s.yarlykov.libsportfolio.domain.instagram.MediaNode
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path

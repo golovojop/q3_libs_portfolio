@@ -6,40 +6,20 @@ import k.s.yarlykov.libsportfolio.di.component.app.AppComponent
 import k.s.yarlykov.libsportfolio.di.component.app.DaggerAppComponent
 import k.s.yarlykov.libsportfolio.di.module.app.AppModule
 import k.s.yarlykov.libsportfolio.di.module.app.NetworkModule
-import k.s.yarlykov.libsportfolio.repository.localstorage.LocalStorage
-import k.s.yarlykov.libsportfolio.repository.PhotoRepository
+import k.s.yarlykov.libsportfolio.di.module.orm.OrmRoomModule
 
-class PortfolioApp : Application(), IRepositoryHelper {
+class PortfolioApp : Application() {
 
-    private val appModule: AppModule by lazy(LazyThreadSafetyMode.NONE) {
-        AppModule(this)
-    }
+    lateinit var appComponent: AppComponent
 
+    override fun onCreate() {
+        super.onCreate()
 
-    private val netModule: NetworkModule by lazy(LazyThreadSafetyMode.NONE) {
-        NetworkModule()
-    }
-
-    private val photoRepo: PhotoRepository by lazy(LazyThreadSafetyMode.NONE) {
-        PhotoRepository(
-            LocalStorage(
-                applicationContext,
-                R.array.month_pics,
-                R.drawable.bkg_05_may
-            ).apply {
-                doUpload()
-            }
-        )
-    }
-
-    val appComponent: AppComponent by lazy(LazyThreadSafetyMode.NONE) {
-
-        DaggerAppComponent
+        appComponent = DaggerAppComponent
             .builder()
-            .appModule(appModule)
-            .networkModule(netModule)
+            .appModule(AppModule(this))
+            .networkModule(NetworkModule())
+            .ormRoomModule(OrmRoomModule(getString(R.string.db_name)))
             .build()
     }
-
-    override fun getPhotoRepository(): PhotoRepository = photoRepo
 }

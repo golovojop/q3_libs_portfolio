@@ -5,19 +5,20 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import io.reactivex.Observable
 import io.reactivex.Observer
-import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.Single
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
-import k.s.yarlykov.libsportfolio.model.Photo
-import kotlin.random.Random
+import k.s.yarlykov.libsportfolio.domain.room.Photo
 
-class LocalStorage(private val context: Context, private val arrayId: Int, private val defaultDrawableId: Int) :
-    ILocalStorage {
+class LocalStorage(
+    private val context: Context,
+    private val arrayId: Int,
+    private val defaultDrawableId: Int
+) : ILocalStorage {
 
-    override fun connect(): Observable<List<Photo>> {
-        return loadCompletion.hide()
-    }
+    override fun connectToBitmapStream(): Single<List<Photo>> =
+        loadCompletion.hide().elementAtOrError(0)
 
     override fun addPhoto(photo: Photo) {
         memoryCache[photo.id] = photo
@@ -29,24 +30,26 @@ class LocalStorage(private val context: Context, private val arrayId: Int, priva
         update()
     }
 
-    private fun update() {
-        loadCompletion.onNext(memoryCache.values.toList())
-    }
-
-    fun doUpload() {
+    override fun populateCache() {
         createPhotoObservable()
             .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
             .subscribe(photoObserver)
+    }
+
+    private fun update() {
+        loadCompletion.onNext(memoryCache.values.toList())
     }
 
     // Step 3
     private fun createPhotoObservable(): Observable<Photo> {
         return createBitmapObservable()
             .map { (id, bitmap) ->
-                Photo(id, bitmap,
+                Photo(
+                    id,         // ID ресурса картинки использовать как ID в базе
+                    "",
+                    setFavouriteStatus(),
                     addLikes(),
-                    setFavouriteStatus()
+                    bitmap
                 )
             }
     }
@@ -61,7 +64,10 @@ class LocalStorage(private val context: Context, private val arrayId: Int, priva
         return createBitmapIdObservable()
             .subscribeOn(Schedulers.io())
             .map { drawableId ->
-                Pair(drawableId, BitmapFactory.decodeResource(context.resources, drawableId, options))
+                Pair(
+                    drawableId,
+                    BitmapFactory.decodeResource(context.resources, drawableId, options)
+                )
             }
     }
 
@@ -82,6 +88,10 @@ class LocalStorage(private val context: Context, private val arrayId: Int, priva
         }
     }
 
+    /**
+     * @onNext - записывает в кеш очередную Photo
+     * @onComplete - собирает все Photo в список и пушит в BehaviorSubject
+     */
     private val photoObserver = object : Observer<Photo> {
         override fun onSubscribe(d: Disposable) {
         }
@@ -99,10 +109,12 @@ class LocalStorage(private val context: Context, private val arrayId: Int, priva
     }
 
     companion object {
+        // Принимает и отдает в потоке Schedulers.io()
+        private val loadCompletion: BehaviorSubject<List<Photo>> = BehaviorSubject.create()
+
         private const val CAPACITY = 128
         private var memoryCache: HashMap<Int, Photo> = HashMap(CAPACITY)
-        private val loadCompletion: BehaviorSubject<List<Photo>> = BehaviorSubject.create()
-        private fun addLikes() = Random.nextInt(0, 5)
-        private fun setFavouriteStatus() = Random.nextBoolean()
+        private fun addLikes() = 0
+        private fun setFavouriteStatus() = false
     }
 }

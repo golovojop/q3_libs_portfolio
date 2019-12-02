@@ -1,4 +1,4 @@
-package k.s.yarlykov.libsportfolio.model.instagram;
+package k.s.yarlykov.libsportfolio.domain.instagram;
 
 import java.util.List;
 

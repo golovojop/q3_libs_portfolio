@@ -1,25 +1,20 @@
 package k.s.yarlykov.libsportfolio.repository.instagram
 
-import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
-import io.reactivex.Observable
+import io.reactivex.Single
 import io.reactivex.subjects.BehaviorSubject
-import k.s.yarlykov.libsportfolio.instagram.network.InstagramAuthApi
-import k.s.yarlykov.libsportfolio.model.instagram.InstagramToken
-import okhttp3.OkHttpClient
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-import java.util.concurrent.TimeUnit
+import k.s.yarlykov.libsportfolio.data.network.InstagramAuthApi
+import k.s.yarlykov.libsportfolio.domain.instagram.InstagramToken
+import k.s.yarlykov.libsportfolio.logIt
 
-object InstagramAuthHelper : IInstagramAuthHelper {
-    private const val baseUrl = "https://api.instagram.com/"
-    private const val HTTP_OK = 200
+class InstagramAuthHelper(private val api: InstagramAuthApi) : IInstagramAuthHelper {
 
     private val appCredentialsHolder = BehaviorSubject.create<Pair<String, String>>()
-    private val api by lazy { initApiAdapter() }
 
-    private val tokenObservable: Observable<InstagramToken> =
+    private val tokenObservable: Single<InstagramToken> =
         appCredentialsHolder
-            .switchMap { (code, secret) ->
+            .elementAtOrError(0)
+            .flatMap { (code, secret) ->
+                logIt("InstagramAuthHelper. code:secret ok")
                 api.tokenRequest(
                     appId = "937802139939708",
                     appSecret = secret,
@@ -28,33 +23,15 @@ object InstagramAuthHelper : IInstagramAuthHelper {
                 )
             }
             .flatMap { okHttpResponse ->
-                if (okHttpResponse.code() != HTTP_OK) {
+                if (!okHttpResponse.isSuccessful) {
                     throw Throwable("Cant' receive security token")
                 }
-
-                Observable.fromCallable { okHttpResponse.body()!! }
+                Single.fromCallable { okHttpResponse.body()!! }
             }
 
-    override fun requestToken(appCode: String, appSecret: String): Observable<InstagramToken> {
+
+    override fun requestToken(appCode: String, appSecret: String): Single<InstagramToken> {
         appCredentialsHolder.onNext(Pair(appCode, appSecret))
         return tokenObservable
-    }
-
-    private fun initApiAdapter(): InstagramAuthApi {
-        // Установить таймауты
-        val okHttpClient = OkHttpClient().newBuilder()
-            .connectTimeout(5, TimeUnit.SECONDS)
-            .readTimeout(10, TimeUnit.SECONDS)
-            .writeTimeout(10, TimeUnit.SECONDS)
-            .build()
-
-        val adapter = Retrofit.Builder()
-            .baseUrl(baseUrl)
-            .client(okHttpClient)
-            .addConverterFactory(GsonConverterFactory.create())
-            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-            .build()
-
-        return adapter.create(InstagramAuthApi::class.java)
     }
 }

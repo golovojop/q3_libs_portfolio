@@ -11,9 +11,9 @@ import k.s.yarlykov.libsportfolio.CONTENT
 import k.s.yarlykov.libsportfolio.KEY_BUNDLE
 import k.s.yarlykov.libsportfolio.KEY_LAYOUT_ID
 import k.s.yarlykov.libsportfolio.R
-import k.s.yarlykov.libsportfolio.di.component.MainActivityComponent
-import k.s.yarlykov.libsportfolio.di.module.MainActivityModule
-import k.s.yarlykov.libsportfolio.model.Photo
+import k.s.yarlykov.libsportfolio.di.component.ui.MainActivityComponent
+import k.s.yarlykov.libsportfolio.di.module.ui.MainActivityModule
+import k.s.yarlykov.libsportfolio.domain.room.Photo
 import k.s.yarlykov.libsportfolio.presenters.ITabFragment
 import k.s.yarlykov.libsportfolio.presenters.TabPresenter
 import k.s.yarlykov.libsportfolio.ui.GridItemDecoration
@@ -54,7 +54,7 @@ abstract class TabFragment : Fragment(), ITabFragment {
             addItemDecoration(GridItemDecoration(2))
             itemAnimator = DefaultItemAnimator()
             layoutManager = GridLayoutManager(activity?.applicationContext, 2)
-            adapter = PhotoRvAdapter(R.layout.layout_rv_item)
+            adapter = PhotoRvAdapter(R.layout.layout_rv_item, presenter)
         }
     }
 }

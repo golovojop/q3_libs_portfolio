@@ -44,15 +44,4 @@ class NetworkModule {
     @Singleton
     fun provideCallAdapterFactory(): CallAdapter.Factory =
         RxJava2CallAdapterFactory.create()
-
-//    @Provides
-//    @Singleton
-//    open fun provideRetrofit(gson: Gson, factory: CallAdapter.Factory, okHttpClient: OkHttpClient): Retrofit =
-//        Retrofit.Builder()
-//            .addConverterFactory(GsonConverterFactory.create(gson))
-//            .addCallAdapterFactory(factory)
-//            .baseUrl(baseUrl)
-//            .client(okHttpClient)
-//            .build()
-
 }

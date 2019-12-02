@@ -1,8 +1,7 @@
 package k.s.yarlykov.libsportfolio.presenters
 
-import com.arellomobile.mvp.MvpView
-import k.s.yarlykov.libsportfolio.model.Photo
+import k.s.yarlykov.libsportfolio.domain.room.Photo
 
-interface ITabFragment : MvpView {
+interface ITabFragment {
     fun updateContent(photos: List<Photo>)
 }

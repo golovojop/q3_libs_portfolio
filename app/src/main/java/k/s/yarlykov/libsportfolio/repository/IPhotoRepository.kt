@@ -1,12 +1,10 @@
 package k.s.yarlykov.libsportfolio.repository
 
 import io.reactivex.Observable
-import k.s.yarlykov.libsportfolio.model.Photo
+import k.s.yarlykov.libsportfolio.domain.room.Photo
 
 interface IPhotoRepository {
-    fun loadGallery() : Observable<List<Photo>>
-    fun loadFavourites() : Observable<List<Photo>>
-    fun addPhoto(photo: Photo)
-    fun deletePhoto(id : Int)
-    fun addToFavourites(id : Int)
+    fun galleryStream() : Observable<List<Photo>>
+    fun favoritesStream() : Observable<List<Photo>>
+    fun onUpdate(position: Int, photo: Photo)
 }

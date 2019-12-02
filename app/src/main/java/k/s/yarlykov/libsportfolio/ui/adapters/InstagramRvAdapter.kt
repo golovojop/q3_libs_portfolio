@@ -8,7 +8,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import k.s.yarlykov.libsportfolio.R
 
-class InstagramRvAdapter(private val itemResourceId: Int) : RecyclerView.Adapter<InstagramRvAdapter.ViewHolder>() {
+class InstagramRvAdapter(private val itemResourceId: Int) :
+    RecyclerView.Adapter<InstagramRvAdapter.ViewHolder>() {
 
     private val model = mutableListOf<String>()
 
@@ -38,10 +39,13 @@ class InstagramRvAdapter(private val itemResourceId: Int) : RecyclerView.Adapter
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        private val ivPic : ImageView = itemView.findViewById(R.id.iv_instagram_pic)
+        private val ivPic: ImageView = itemView.findViewById(R.id.iv_instagram_pic)
 
         fun bind(uri: String) {
-            Picasso.get().load(uri).into(ivPic)
+            Picasso
+                .get()
+                .load(uri)
+                .into(ivPic)
         }
     }
 }

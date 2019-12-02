@@ -9,14 +9,17 @@ package k.s.yarlykov.libsportfolio.ui
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.viewpager.widget.ViewPager
+import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 import k.s.yarlykov.libsportfolio.CONTENT
 import k.s.yarlykov.libsportfolio.KEY_LAYOUT_ID
 import k.s.yarlykov.libsportfolio.R
 import k.s.yarlykov.libsportfolio.application.PortfolioApp
-import k.s.yarlykov.libsportfolio.di.component.DaggerMainActivityComponent
-import k.s.yarlykov.libsportfolio.di.component.MainActivityComponent
-import k.s.yarlykov.libsportfolio.di.module.MainActivityModule
+import k.s.yarlykov.libsportfolio.di.component.ui.DaggerMainActivityComponent
+import k.s.yarlykov.libsportfolio.di.component.ui.MainActivityComponent
+import k.s.yarlykov.libsportfolio.di.module.ui.MainActivityModule
+import k.s.yarlykov.libsportfolio.logIt
 import k.s.yarlykov.libsportfolio.presenters.IMainView
 import k.s.yarlykov.libsportfolio.presenters.MainPresenter
 import k.s.yarlykov.libsportfolio.ui.adapters.CustomFragmentPagerAdapter
@@ -32,15 +35,12 @@ class MainActivity :
     IMainView,
     IDependencies<MainActivityComponent, MainActivityModule> {
 
-
     /**
      * LeakCanary test
      */
-    companion object {
-        lateinit var activity : AppCompatActivity
-    }
-
-
+//    companion object {
+//        lateinit var activity : AppCompatActivity
+//    }
 
     @Inject
     lateinit var presenter: MainPresenter
@@ -62,7 +62,10 @@ class MainActivity :
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        activity = this
+        /**
+         * LeakCanary test
+         */
+//        activity = this
 
         activityComponent.inject(this)
 
@@ -71,8 +74,8 @@ class MainActivity :
             /**
              * Crashlytics test
              */
-            throw NullPointerException("Crashlytics test")
-//            presenter.onFabTapped()
+//            throw NullPointerException("Crashlytics test")
+            presenter.onFabTapped()
         }
 
         initTabs()
